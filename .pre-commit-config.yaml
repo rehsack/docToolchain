@@ -79,3 +79,9 @@ repos:
     hooks:
       - id: shellcheck
         exclude: '^(gradlew)$'
+  - repo: https://github.com/nvuillam/npm-groovy-lint
+    rev: v15.0.2
+    hooks:
+      - id: npm-groovy-lint
+      - id: format-npm-groovy-lint
+      - id: fix-npm-groovy-lint
