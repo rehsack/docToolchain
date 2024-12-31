@@ -6,7 +6,7 @@ import java.util.logging.Logger
 
 class AsciiDocConverter extends IssueConverter {
 
-    private static final Logger LOGGER = Logger.getLogger(AsciiDocConverter.class.getName())
+    private static final Logger LOGGER = Logger.getLogger(AsciiDocConverter.getName())
 
     private static final String EXTENSION = 'adoc'
 
@@ -35,8 +35,6 @@ class AsciiDocConverter extends IssueConverter {
         outputFile.append("\n", 'utf-8')
     }
 
-
-
     @Override
     def convertAndAppend(issue, jiraRoot, jiraDateTimeFormatParse, jiraDateTimeOutput,
                          Boolean showAssignee, Boolean showTicketStatus, Boolean showTicketType,
@@ -46,13 +44,13 @@ class AsciiDocConverter extends IssueConverter {
         outputFile.append("\n", 'utf-8')
         outputFile.append("| ${jiraRoot}/browse/${issue.key}[${issue.key}] ", 'utf-8')
         //TODO this is a workaround and this will be removed when we will have a better solution
-        if(showPriority) {
+        if (showPriority) {
             outputFile.append("| ${issue.fields.priority.name} ", 'utf-8')
         }
-        if(showCreatedDate) {
+        if (showCreatedDate) {
             outputFile.append("| ${DateUtil.format(issue.fields.created, jiraDateTimeFormatParse, jiraDateTimeOutput)} ", 'utf-8')
         }
-        if(showResolvedDate) {
+        if (showResolvedDate) {
             outputFile.append("| ${issue.fields.resolutiondate ? DateUtil.format(issue.fields.resolutiondate, jiraDateTimeFormatParse, jiraDateTimeOutput) : ''} ", 'utf-8')
         }
         //end of workaround
@@ -68,14 +66,15 @@ class AsciiDocConverter extends IssueConverter {
         }
 
         customFields.each { field ->
-            def foundCustom = issue.fields.find {it.key == field.key}
+            def foundCustom = issue.fields.find { it.key == field.key }
             //logger.quiet("Examining issue '${issue.key}' for custom field '${field.key}' has found: '${foundCustom}'")
             outputFile.append("| ${foundCustom ? foundCustom.value : '-'}\n", 'utf-8')
         }
-    }
+                         }
 
     @Override
     def finalizeOutput() {
-        outputFile.append("\n|=== \n",'utf-8')
+        outputFile.append("\n|=== \n", 'utf-8')
     }
+
 }

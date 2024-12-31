@@ -1,6 +1,5 @@
-import org.json.*;
+import org.json.*
 import groovy.json.JsonSlurper
-
 
 //The GlossaryHandler reads all files from a given folder path url.
 //It expects the files are JSON formatted glossary exports from EA.
@@ -13,8 +12,8 @@ import groovy.json.JsonSlurper
 //An additional file is written to the folder containing the entries of all
 //single glossaries in an alphabetical sorted order.
 //This global glossary is stored as glossary.ad.
-class GlossaryHandler
-{
+class GlossaryHandler {
+
     private List<List<Object>> globalGlossaryList = []
 
     //Collect all files inside the glossary folder (jsonFilePath)
@@ -27,17 +26,17 @@ class GlossaryHandler
             if (file.isFile()) {
                 glossaryFile = file.canonicalPath
                 reformatJsonFile(glossaryFile, outputFormat, glossaryTypes)
-                count = count+1
+                count = count + 1
             }
         }
         if (!globalGlossaryList.isEmpty()) {
             if (count == 1) {
                 //use the already sorted and stored file, but rename it
-                new File(glossaryFile).renameTo(new File(jsonFilePath+"/glossary.ad"))
+                new File(glossaryFile).renameTo(new File(jsonFilePath + '/glossary.ad'))
             }
             else {
                 //sort and store the global glossary (summary of all single glossaries)
-                sortAndWriteToFile(jsonFilePath+"/glossary.ad", globalGlossaryList, outputFormat)
+                sortAndWriteToFile(jsonFilePath + '/glossary.ad', globalGlossaryList, outputFormat)
             }
         }
     }
@@ -62,7 +61,7 @@ class GlossaryHandler
     //Sorts the given glossaryList in alphabetical order and calls the output formatter
     //to create the new output format and write the file.
     void sortAndWriteToFile(jsonFilePath, glossaryList, outputFormat) {
-        glossaryList.sort{a, b -> a['term'].compareTo(b['term'])}
+        glossaryList.sort { a, b -> a['term'].compareTo(b['term']) }
         writeFormattedGlossaryToFile(jsonFilePath, glossaryList, outputFormat)
     }
 
@@ -74,14 +73,15 @@ class GlossaryHandler
     void writeFormattedGlossaryToFile(jsonFilePath, glossaryList, outputFormat) {
         new File(jsonFilePath).withWriter('utf-8') { writer ->
             glossaryList.each { key ->
-                def out = outputFormat.replace("ID" , key['termID'])
-                out = out.replace("TERM" , key['term'])
-                out = out.replace("MEANING" , key['meaning'])
-                out = out.replace("TYPE" , key['type'])
+                def out = outputFormat.replace('ID' , key['termID'])
+                out = out.replace('TERM' , key['term'])
+                out = out.replace('MEANING' , key['meaning'])
+                out = out.replace('TYPE' , key['type'])
                 writer.writeLine(out)
             }
         }
     }
+
 }
 
 //tag::streamingExecute[]
@@ -100,23 +100,22 @@ task streamingExecute(
             }
             def p
             try {
-                String commandUTF8 = new String(command.toString().getBytes(), 'utf-8');
+                String commandUTF8 = new String(command.toString().getBytes(), 'utf-8')
                 p = "cmd.exe /c ${commandUTF8}".execute()
             } catch (Exception e) {
-                throw new Exception ("""
+                throw new Exception('''
 sorry, this task currently needs needs windows as operation system
 if you started this task from WSL, please switch to powershell
-""" + e.getMessage())
-
+''' + e.getMessage())
             }
             def result = [std: '', err: '']
             def ready = false
             Thread.start {
                 def reader = new BufferedReader(new InputStreamReader(p.in))
-                def line = ""
+                def line = ''
                 while ((line = reader.readLine()) != null) {
                     if (silent != false) {
-                        println "" + line
+                        println '' + line
                     }
                     result.std += line + "\n"
                 }
@@ -145,16 +144,16 @@ task exportEA(
     doFirst {
     }
     doLast {
-        logger.info("docToolchain > exportEA: " + docDir)
-        logger.info("docToolchain > exportEA: " + mainConfigFile)
+        logger.info('docToolchain > exportEA: ' + docDir)
+        logger.info('docToolchain > exportEA: ' + mainConfigFile)
         def configFile = new File(docDir, mainConfigFile)
         def config = new ConfigSlurper().parse(configFile.text)
-        def scriptParameterString = ""
-        def exportPath = ""
-        def searchPath = ""
-        def glossaryPath = ""
-        def imageFormat = ""
-        def readme = """This folder contains exported diagrams or notes from Enterprise Architect.
+        def scriptParameterString = ''
+        def exportPath = ''
+        def searchPath = ''
+        def glossaryPath = ''
+        def imageFormat = ''
+        def readme = '''This folder contains exported diagrams or notes from Enterprise Architect.
 
 Please note that these are generated files but reside in the `src`-folder in order to be versioned.
 
@@ -162,18 +161,18 @@ This is to make sure that they can be used from environments other than windows.
 
 # Warning!
 
-**The contents of this folder	will be overwritten with each re-export!**
+**The contents of this folder    will be overwritten with each re-export!**
 
 use `gradle exportEA` to re-export files
-"""
+'''
 
         if (!config.exportEA.connection.isEmpty()) {
-            logger.info("docToolchain > exportEA: found " + config.exportEA.connection)
+            logger.info('docToolchain > exportEA: found ' + config.exportEA.connection)
             scriptParameterString = scriptParameterString + "-c \"${config.exportEA.connection}\""
         }
         if (!config.exportEA.packageFilter.isEmpty()) {
             def packageFilterToCreate = config.exportEA.packageFilter as List
-            logger.info("docToolchain > exportEA: package filter list size: " + packageFilterToCreate.size())
+            logger.info('docToolchain > exportEA: package filter list size: ' + packageFilterToCreate.size())
             packageFilterToCreate.each { packageFilter ->
                 scriptParameterString = scriptParameterString + " -p \"${packageFilter}\""
             }
@@ -187,22 +186,22 @@ use `gradle exportEA` to re-export files
             searchPath = new File(docDir, config.exportEA.searchPath).getAbsolutePath()
         }
         else if (!config.exportEA.absoluteSearchPath.isEmpty()) {
-        searchPath = new File(config.exportEA.absoluteSearchPath).getAbsolutePath()
+            searchPath = new File(config.exportEA.absoluteSearchPath).getAbsolutePath()
         }
         else {
             searchPath = new File(docDir, 'src').getAbsolutePath()
         }
         if (config.exportEA.imageFormat.isEmpty()) {
-            imageFormat = ".png"
-        } else if(!config.exportEA.imageFormat.startsWith(".")) {
-            imageFormat = "." + config.exportEA.imageFormat
+            imageFormat = '.png'
+        } else if (!config.exportEA.imageFormat.startsWith('.')) {
+            imageFormat = '.' + config.exportEA.imageFormat
         } else {
             imageFormat = config.exportEA.imageFormat
         }
         scriptParameterString = scriptParameterString + " -d \"$exportPath\""
         scriptParameterString = scriptParameterString + " -s \"$searchPath\""
         scriptParameterString = scriptParameterString + " -f \"$imageFormat\""
-        logger.info("docToolchain > exportEA: exportPath: " + exportPath)
+        logger.info('docToolchain > exportEA: exportPath: ' + exportPath)
 
         //remove old glossary files/folder if exist
         new File(exportPath, 'glossary').deleteDir()
@@ -234,13 +233,13 @@ use `gradle exportEA` to re-export files
         new File(exportPath, 'ea/readme.ad').write(readme)
 
         //execute through cscript in order to make sure that we get WScript.echo right
-        logger.info("docToolchain > exportEA: parameters: " + scriptParameterString)
+        logger.info('docToolchain > exportEA: parameters: ' + scriptParameterString)
         "%SystemRoot%\\System32\\cscript.exe //nologo ${projectDir}/scripts/exportEAP.vbs ${scriptParameterString}".executeCmd()
         //the VB Script is only capable of writing iso-8859-1-Files.
         //we now have to convert them to UTF-8
         new File(exportPath, 'ea/.').eachFileRecurse { file ->
             if (file.isFile()) {
-                println "exported notes " + file.canonicalPath
+                println 'exported notes ' + file.canonicalPath
                 file.write(file.getText('iso-8859-1'), 'utf-8')
             }
         }
@@ -252,7 +251,7 @@ use `gradle exportEA` to re-export files
             if (!config.exportEA.glossaryTypes.isEmpty()) {
                 glossaryTypes = config.exportEA.glossaryTypes as List
             }
-            new GlossaryHandler().execute(glossaryPath, config.exportEA.glossaryAsciiDocFormat, glossaryTypes);
+            new GlossaryHandler().execute(glossaryPath, config.exportEA.glossaryAsciiDocFormat, glossaryTypes)
         }
     }
 }

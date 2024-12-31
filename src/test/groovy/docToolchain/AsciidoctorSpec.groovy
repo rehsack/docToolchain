@@ -1,10 +1,10 @@
 package docToolchain
 
-import org.gradle.testkit.runner.GradleRunner
-import spock.lang.Specification
-
 import static org.gradle.testkit.runner.TaskOutcome.FAILED
 import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
+
+import org.gradle.testkit.runner.GradleRunner
+import spock.lang.Specification
 
 class AsciidoctorSpec extends Specification {
 
@@ -31,14 +31,14 @@ class AsciidoctorSpec extends Specification {
             ])
             .buildAndFail()
         then: 'the task has been failed'
-            result.task(":asciidoctor").outcome == FAILED
+        result.task(':asciidoctor').outcome == FAILED
         and: 'the output does contain the warning "image to embed not found or not readable"'
-            println result.output
-            result.output.contains('- image to embed not found or not readable:')
+        println result.output
+        result.output.contains('- image to embed not found or not readable:')
         and: 'threw an exception to fail the build'
-            result.output.contains('at org.asciidoctor.gradle.remote.ExecutorBase.failOnWarnings')
+        result.output.contains('at org.asciidoctor.gradle.remote.ExecutorBase.failOnWarnings')
         and: 'an output file has been created'
-            new File('./src/test/testAsciidoctor/build/test/docs/asciidoctor/broken_images.html').exists()
+        new File('./src/test/testAsciidoctor/build/test/docs/asciidoctor/broken_images.html').exists()
     }
 
     void 'test correct handling of images, ignoring missing images'() {
@@ -61,10 +61,10 @@ class AsciidoctorSpec extends Specification {
             ])
             .build()
         then: 'the task has been failed'
-        result.task(":asciidoctor").outcome == SUCCESS
+        result.task(':asciidoctor').outcome == SUCCESS
         and: 'the output does not contain the warning "image to embed not found or not readable"'
         println result.output
-            !result.output.contains('- image to embed not found or not readable:')
+        !result.output.contains('- image to embed not found or not readable:')
         and: 'an output file has been created'
         new File('./src/test/testAsciidoctor/build/test/docs/asciidoctor/broken_images.html').exists()
     }

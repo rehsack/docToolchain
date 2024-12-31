@@ -1,18 +1,13 @@
-import groovyx.net.http.RESTClient
-import groovyx.net.http.HttpResponseException
-import groovyx.net.http.HTTPBuilder
-import groovyx.net.http.EncoderRegistry
-import groovyx.net.http.ContentType
 
 try {
     def config
     config = new ConfigSlurper().parse(new File(docDir, mainConfigFile).text)
 
     def stats = [:]
-    def jira = new groovyx.net.http.RESTClient(config.jiraAPI)
-    jira.encoderRegistry = new groovyx.net.http.EncoderRegistry(charset: 'utf-8')
+    def jira = new RESTClient(config.jiraAPI)
+    jira.encoderRegistry = new EncoderRegistry(charset: 'utf-8')
     def headers = [
-            'Authorization': "Basic " + config.jira.credentials,
+            'Authorization': 'Basic ' + config.jira.credentials,
             'Content-Type' : 'application/json; charset=utf-8'
     ]
     jira.get(path: 'search',
@@ -27,7 +22,7 @@ try {
         print("|${Date.parse("yyyy-MM-dd'T'H:m:s.000z", issue.fields.created).format('dd.MM.yy')}")
         print("|${issue.fields.assignee ? issue.fields.assignee.displayName : 'not assigned'}")
         print("|${issue.fields.summary}")
-        println("|${config.jiraAPI - "/rest/api/2/"}/browse/${issue.key}")
+        println("|${config.jiraAPI - '/rest/api/2/'}/browse/${issue.key}")
     }
 } catch (Exception e) {
     println e

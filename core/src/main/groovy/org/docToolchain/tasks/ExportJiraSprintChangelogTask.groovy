@@ -6,7 +6,7 @@ import java.util.logging.Logger
 
 class ExportJiraSprintChangelogTask extends DocToolchainTask {
 
-    Logger LOGGER = Logger.getLogger(ExportJiraSprintChangelogTask.class.getName())
+    Logger LOGGER = Logger.getLogger(ExportJiraSprintChangelogTask.getName())
 
     JiraService jiraService
 
@@ -17,7 +17,8 @@ class ExportJiraSprintChangelogTask extends DocToolchainTask {
 
     @Override
     void execute() {
-        LOGGER.info("Starting Jira Sprint Changelog Export...")
+        LOGGER.info('Starting Jira Sprint Changelog Export...')
         jiraService.exportJiraSprintChangelog()
     }
+
 }

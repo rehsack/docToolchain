@@ -21,11 +21,11 @@ rootProject.name = 'docToolchain'
 dependencyResolutionManagement {
     versionCatalogs {
         libs {
-            from(files("libs.versions.toml"))
+            from(files('libs.versions.toml'))
         }
     }
 }
 
 if (!file("libs/org/docToolchain/core-${properties.dtc_version}.jar").exists()) {
-    includeBuild("core")
+    includeBuild('core')
 }

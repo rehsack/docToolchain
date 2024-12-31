@@ -5,10 +5,11 @@ import spock.lang.Unroll
 import spock.lang.Requires
 
 class DtcwOnPowershellSpec extends Specification {
+
     List powershell(List command) {
         def shell = ['pwsh', '-ExecutionPolicy', 'Unrestricted']
         //def setup = ['$HOME = \\"'+new File('./build/home').canonicalPath+'\\"',';']
-        def process = (shell+command).execute(null, new File('.'))
+        def process = (shell + command).execute(null, new File('.'))
         def sout = new StringBuilder()
         def serr = new StringBuilder()
         process.consumeProcessOutput(sout, serr)
@@ -20,21 +21,21 @@ class DtcwOnPowershellSpec extends Specification {
     @Requires({ os.windows })
     void 'test Powershell'() {
         when: 'pwd is executed'
-            def (out,err) = powershell(['-Command', 'Get-Location'])
+        def (out,err) = powershell(['-Command', 'Get-Location'])
         then: 'there is no error and the output contains "Path"'
-            err == ""
-            out.contains('Path')
+        err == ''
+        out.contains('Path')
     }
 
     @Unroll
     @Requires({ os.windows })
     void 'test dtcw without parameters'() {
         when: '"./dtcw.ps1" is executed without any parameters'
-            def (out,err) = powershell(['./dtcw.ps1'])
+        def (out,err) = powershell(['./dtcw.ps1'])
         then: 'we get an assertion and the usage is printed out'
-            err == ""
-            out.contains('Usage: ./dtcw')
-            out.contains('Examples:')
+        err == ''
+        out.contains('Usage: ./dtcw')
+        out.contains('Examples:')
     }
 
     @Unroll
@@ -53,11 +54,11 @@ class DtcwOnPowershellSpec extends Specification {
     @Requires({ os.windows })
     void 'test local installation of jdk'() {
         when: '"./dtcw.ps1 install java" is executed'
-            def (out,err) = powershell(['./dtcw.ps1', 'install', 'java'])
-            println "out: "+out
-            println "err: "+err
+        def (out,err) = powershell(['./dtcw.ps1', 'install', 'java'])
+        println 'out: ' + out
+        println 'err: ' + err
         then: 'there is no error'
-            err == ""
+        err == ''
     }
 
     @Unroll
@@ -66,17 +67,17 @@ class DtcwOnPowershellSpec extends Specification {
         //setup: 'remove jdk folder'
         //    rm "$HOME/.doctoolchain/jdk"
         when: '"./dtcw.ps1 local install" is executed for the first time'
-            def (out,err) = powershell(['./dtcw.ps1','local','install'])
-            println "out: "+out
-            println "err: "+err
+        def (out, err) = powershell(['./dtcw.ps1', 'local', 'install'])
+        println 'out: ' + out
+        println 'err: ' + err
         then: 'there is no error'
-            err == ""
+        err == ''
         when: '"./dtcw.ps1 local install" is executed a second time'
-            (out,err) = powershell(['./dtcw.ps1','local','install'])
-            println "out: "+out
-            println "err: "+err
+        (out, err) = powershell(['./dtcw.ps1', 'local', 'install'])
+        println 'out: ' + out
+        println 'err: ' + err
         then: 'there is no error'
-            err == ""
+        err == ''
     }
 
 }

@@ -29,22 +29,22 @@ config = configSlurper.parse(new File(docDir, mainConfigFile).text)
 
 //tag::htmlSanityCheck[]
 htmlSanityCheck {
-    sourceDir = new File(config.htmlSanityCheck.sourceDir?targetDir+"/"+config.htmlSanityCheck.sourceDir:"$targetDir/html5")
+    sourceDir = new File(config.htmlSanityCheck.sourceDir ? targetDir + '/' + config.htmlSanityCheck.sourceDir : "$targetDir/html5")
     // files to check - in Set-notation
     //sourceDocuments = [ "one-file.html", "another-file.html", "index.html"]
 
     // where to put results of sanityChecks...
-    checkingResultsDir = new File(config.htmlSanityCheck.checkingResultsDir?:checkingResultsPath)
+    checkingResultsDir = new File(config.htmlSanityCheck.checkingResultsDir ?: checkingResultsPath)
     // directory where the results written to in JUnit XML format
-    junitResultsDir = new File(config.htmlSanityCheck.junitResultsDir?:"$targetDir/test-results/htmlchecks")
+    junitResultsDir = new File(config.htmlSanityCheck.junitResultsDir ?: "$targetDir/test-results/htmlchecks")
 
     // which statuscodes shall be interpreted as warning, error or success defaults to standard
-    httpSuccessCodes = config.htmlSanityCheck.httpSuccessCodes?:[]
-    httpWarningCodes = config.htmlSanityCheck.httpWarningCodes?:[]
-    httpErrorCodes = config.htmlSanityCheck.httpErrorCodes?:[]
+    httpSuccessCodes = config.htmlSanityCheck.httpSuccessCodes ?: []
+    httpWarningCodes = config.htmlSanityCheck.httpWarningCodes ?: []
+    httpErrorCodes = config.htmlSanityCheck.httpErrorCodes ?: []
 
     // fail build on errors?
-    failOnErrors = config.htmlSanityCheck.failOnErrors?:false
+    failOnErrors = config.htmlSanityCheck.failOnErrors ?: false
 
     logger.info "docToolchain> HSC sourceDir: ${sourceDir}"
     logger.info "docToolchain> HSC checkingResultsDir: ${checkingResultsDir}"

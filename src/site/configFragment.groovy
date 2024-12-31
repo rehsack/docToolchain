@@ -1,4 +1,4 @@
-branch = System.getenv("DTC_PROJECT_BRANCH")
+branch = System.getenv('DTC_PROJECT_BRANCH')
 // the title of the microsite, displayed in the upper left corner
 title = '##site-title##'
 // the next items configure some links in the footer

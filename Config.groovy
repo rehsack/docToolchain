@@ -9,10 +9,10 @@ outputPath = 'build/docs'
 // This path is appended to the docDir property specified in gradle.properties
 // or in the command line, and therefore must be relative to it.
 
-inputPath = 'src/docs';
+inputPath = 'src/docs'
 
 inputFiles = [
-        [file: 'manual_test_script.adoc',       formats: ['html','pdf']],
+        [file: 'manual_test_script.adoc', formats: ['html', 'pdf']],
         /** inputFiles **/
 ]
 
@@ -50,7 +50,6 @@ jbake.with {
 exportChangelog = [:]
 
 changelog.with {
-
     // Directory of which the exportChangelog task will export the changelog.
     // It should be relative to the docDir directory provided in the
     // gradle.properties file.
@@ -67,7 +66,6 @@ changelog.with {
     //
     // See also https://git-scm.com/docs/pretty-formats
     cmd = 'git log --pretty=format:%x7c%x20%ad%x20%n%x7c%x20%an%x20%n%x7c%x20%s%x20%n --date=short'
-
 }
 
 //*****************************************************************************************
@@ -105,7 +103,7 @@ confluence = [:]
 // only 'file' or 'url' is allowed. If both are given, 'url' is ignored
 confluence.with {
     input = [
-            [ file: "build/docs/html5/arc42-template-de.html" ],
+            [ file: 'build/docs/html5/arc42-template-de.html' ],
     ]
 
     // endpoint of the confluenceAPI (REST) to be used
@@ -159,14 +157,13 @@ confluence.with {
     // default attachmentPrefix = attachment - All files to attach will require to be linked inside the document.
     // attachmentPrefix = "attachment"
 
-
     // Optional proxy configuration, only used to access Confluence
     // schema supports http and https
     // proxy = [host: 'my.proxy.com', port: 1234, schema: 'http']
 
-    // Optional: specify which Confluence OpenAPI Macro should be used to render OpenAPI definitions
-    // possible values: ["confluence-open-api", "open-api", "swagger-open-api", true]. true is the same as "confluence-open-api" for backward compatibility
-    // useOpenapiMacro = "confluence-open-api"
+// Optional: specify which Confluence OpenAPI Macro should be used to render OpenAPI definitions
+// possible values: ["confluence-open-api", "open-api", "swagger-open-api", true]. true is the same as "confluence-open-api" for backward compatibility
+// useOpenapiMacro = "confluence-open-api"
 }
 //end::confluenceConfig[]
 //*****************************************************************************************
@@ -240,7 +237,6 @@ htmlSanityCheck.with {
 jira = [:]
 
 jira.with {
-
     // endpoint of the JiraAPI (REST) to be used
     api = 'https://your-jira-instance'
 
@@ -265,7 +261,7 @@ jira.with {
     dateTimeFormatParse = "yyyy-MM-dd'T'H:m:s.SSSz" // i.e. 2020-07-24'T'9:12:40.999 CEST
 
     // the format in which the date time should be saved to output
-    dateTimeFormatOutput = "dd.MM.yyyy HH:mm:ss z" // i.e. 24.07.2020 09:02:40 CEST
+    dateTimeFormatOutput = 'dd.MM.yyyy HH:mm:ss z' // i.e. 24.07.2020 09:02:40 CEST
 
     // the label to restrict search to
     label = 'label1'
@@ -290,7 +286,7 @@ jira.with {
     */
     exports = [
         [
-            filename:"File1_Done_issues",
+            filename:'File1_Done_issues',
             jql:"project='%jiraProject%' AND status='Done' ORDER BY duedate ASC",
             customfields: [customfield_10026:'Story Points']
         ],
@@ -324,7 +320,7 @@ openApi.with {
 sprintChangelog = [:]
 sprintChangelog.with {
     sprintState = 'closed' // it is possible to define multiple states, i.e. 'closed, active, future'
-    ticketStatus = "Done, Closed" // it is possible to define multiple ticket statuses, i.e. "Done, Closed, 'in Progress'"
+    ticketStatus = 'Done, Closed' // it is possible to define multiple ticket statuses, i.e. "Done, Closed, 'in Progress'"
 
     showAssignee = false
     showTicketStatus = false
@@ -340,12 +336,10 @@ sprintChangelog.with {
 }
 //end::sprintChangelogConfig[]
 
-
 //tag::collectIncludesConfig[]
 collectIncludes = [:]
 
 collectIncludes.with {
-
 //    fileFilter = "adoc" // define which files are considered. default: "ad|adoc|asciidoc"
 
 //    minPrefixLength = "3" // define what minimum length the prefix. default: "3"
@@ -365,15 +359,14 @@ collectIncludes.with {
 structurizr = [:]
 
 structurizr.with {
-
     // Configure where `exportStructurizr` looks for the Structurizr model.
     workspace = {
         // The directory in which the Structurizr workspace file is located.
         // path = 'src/docs/structurizr'
 
-        // By default `exportStructurizr` looks for a file '${structurizr.workspace.path}/workspace.dsl'
-        // You can customize this behavior with 'filename'. Note that the workspace filename is provided without '.dsl' extension.
-        // filename = 'workspace'
+    // By default `exportStructurizr` looks for a file '${structurizr.workspace.path}/workspace.dsl'
+    // You can customize this behavior with 'filename'. Note that the workspace filename is provided without '.dsl' extension.
+    // filename = 'workspace'
     }
 
     export = {
@@ -383,13 +376,13 @@ structurizr.with {
         // If a valid Structurizr workspace file is found the directory is deleted before the diagram files are generated.
         // outputPath = 'src/docs/structurizr/diagrams'
 
-        // Format of the exported diagrams. Defaults to 'plantuml' if the parameter is not provided.
-        //
-        // Following formats are supported:
-        // - 'plantuml': the same as 'plantuml/structurizr'
-        // - 'plantuml/structurizr': exports views to PlantUML
-        // - 'plantuml/c4plantuml': exports views to PlantUML with https://github.com/plantuml-stdlib/C4-PlantUML
-        // format = 'plantuml'
+    // Format of the exported diagrams. Defaults to 'plantuml' if the parameter is not provided.
+    //
+    // Following formats are supported:
+    // - 'plantuml': the same as 'plantuml/structurizr'
+    // - 'plantuml/structurizr': exports views to PlantUML
+    // - 'plantuml/c4plantuml': exports views to PlantUML with https://github.com/plantuml-stdlib/C4-PlantUML
+    // format = 'plantuml'
     }
 }
 //end::structurizrConfig[]
@@ -403,9 +396,9 @@ openAI.with {
     // Ensure to pass this token as parameters when calling the task
     // using -PopenAI.token=xx-xxxxxxxxxxxxxx
 
-    //model = "text-davinci-003"
-    //maxToken = '500'
-    //temperature = '0.3'
+//model = "text-davinci-003"
+//maxToken = '500'
+//temperature = '0.3'
 }
 //end::openAIConfig[]
 

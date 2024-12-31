@@ -6,27 +6,27 @@ import java.util.logging.Logger
 
 class LegacyJiraProcessor {
 
-    private static final Logger LOGGER = Logger.getLogger(LegacyJiraProcessor.class.getName())
+    private static final Logger LOGGER = Logger.getLogger(LegacyJiraProcessor.getName())
 
     final static private String SELECTED_FIELDS = 'created,resolutiondate,priority,summary,timeoriginalestimate, assignee'
 
     @Deprecated
-    def static transformLegacyConfiguration(HashSet jiraRequests){
+    static transformLegacyConfiguration(HashSet jiraRequests) {
         HashSet transformedRequests = []
-            jiraRequests.each {rq ->
+        jiraRequests.each { rq ->
                 transformedRequests.add([
                     filename: rq.filename,
                     jql: rq.jql,
                     customfields: rq.customfields
                 ])
-            }
+        }
         LOGGER.info("Tranformed ${transformedRequests.size()} legacy Jira config items")
         return transformedRequests
     }
 
     @Deprecated
-    def static processLegacyRequests(File targetFolder, jiraConfig, JiraClient jiraClient){
-        println("Found legacy Jira requests. Please migrate to the new Jira configuration ASAP. Old config with jql will be removed soon")
+    static processLegacyRequests(File targetFolder, jiraConfig, JiraClient jiraClient) {
+        println('Found legacy Jira requests. Please migrate to the new Jira configuration ASAP. Old config with jql will be removed soon')
         String resultsFilename = "${jiraConfig.resultsFilename}_legacy.adoc"
 
         File outputFile = new File(targetFolder, "${resultsFilename}")
@@ -44,4 +44,5 @@ class LegacyJiraProcessor {
         }
         outputFile.append("|=== \n")
     }
+
 }

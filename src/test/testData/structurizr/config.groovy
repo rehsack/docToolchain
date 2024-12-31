@@ -5,15 +5,14 @@ outputPath = 'build/test/docs'
 structurizr = [:]
 
 structurizr.with {
-
     workspace = {
         path = './src/test/testData/structurizr/default'
-        // The workspace filename is provided without extension.
-        // filename = 'workspace'
+    // The workspace filename is provided without extension.
+    // filename = 'workspace'
     }
 
     export = {
         outputPath = './src/test/docs/structurizr'
-        // format = 'plantuml'
+    // format = 'plantuml'
     }
 }

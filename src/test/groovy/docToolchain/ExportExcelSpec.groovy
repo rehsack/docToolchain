@@ -1,12 +1,12 @@
 package docToolchain
 
+import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
+
 import org.gradle.testkit.runner.GradleRunner
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
 import spock.lang.Unroll
-
-import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
 
 @Stepwise
 class ExportExcelSpec extends Specification {
@@ -24,37 +24,37 @@ class ExportExcelSpec extends Specification {
             filenameList << file.name
             filecontentList << file.text
                                     .trim()
-                                    .replaceAll("\r","")
+                                    .replaceAll("\r", '')
                                     // the output depends on the locale!
-                                    .replaceAll("([0-9])[,]([0-9])",'$1.$2')
+                                    .replaceAll('([0-9])[,]([0-9])','$1.$2')
         }
         println filenameList
     }
 
     void 'test export of Excel file'() {
         when: 'the gradle task is invoked'
-                def result = GradleRunner.create()
+        def result = GradleRunner.create()
                         .withProjectDir(new File('.'))
                         .withArguments(['exportExcel', '--info', '-PmainConfigFile=./src/test/config.groovy'])
                         .build()
         then: 'the task has been successfully executed'
-                result.task(":exportExcel").outcome == SUCCESS
+        result.task(':exportExcel').outcome == SUCCESS
     }
     @Unroll
     void 'test exported files: #filename'() {
         when: 'the test before exported the excel file'
         then: 'the export file have been created'
-                new File('./src/test/docs/excel/Sample.xlsx/'+filename).exists() == true
+        new File('./src/test/docs/excel/Sample.xlsx/' + filename).exists() == true
                 and: 'its content ends with our sample file'
-                new File('./src/test/docs/excel/Sample.xlsx/'+filename)
+        new File('./src/test/docs/excel/Sample.xlsx/' + filename)
                             .text.trim()
-                                    .replaceAll("\r","")
+                                    .replaceAll("\r", '')
                                     // the output depends on the locale!
-                                    .replaceAll("([0-9])[,]([0-9])",'$1.$2')
+                                    .replaceAll('([0-9])[, ]([0-9])', '$1.$2')
                                     .endsWith(filecontent)
         where: 'iterate the expected files'
-                filename << filenameList
-                filecontent << filecontentList
+        filename << filenameList
+        filecontent << filecontentList
     }
 
 }

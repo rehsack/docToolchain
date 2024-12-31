@@ -1,4 +1,3 @@
-import java.util.zip.ZipFile
 
 // fix versions for #1200
 buildscript {
@@ -12,7 +11,7 @@ buildscript {
             if (details.requested.group == 'org.ysb33r.gradle' && details.requested.name == 'grolifant' && details.requested.version == '0.12.1') {
                 details.useVersion '0.16.1'
                 details.because 'jcenter redirect'
-                System.out.println ">>>>>>>>> fix grolifant"
+                System.out.println '>>>>>>>>> fix grolifant'
             }
         }
     }
@@ -55,7 +54,7 @@ dependencies {
     if (file("libs/org/docToolchain/core-${project.properties.dtc_version}.jar").exists()) {
         testImplementation(files("libs/org/docToolchain/core-${project.properties.dtc_version}.jar"))
     } else {
-        testImplementation("org.docToolchain:core")
+        testImplementation('org.docToolchain:core')
     }
     testRuntimeOnly(libs.byte.buddy)
     compileClasspath((libs.http.client))
@@ -65,7 +64,7 @@ test {
     useJUnitPlatform()
 }
 
-if (project.name!=rootProject.name) {
+if (project.name != rootProject.name) {
     // disable all tasks which are not docToolchain tasks
     // this avoids for example that task 'check' runs if invoked in main project
     gradle.taskGraph.whenReady {
@@ -75,11 +74,11 @@ if (project.name!=rootProject.name) {
                 task.enabled = true
             } else {
                 task.enabled = false
-            }
+                    }
         }
     }
-    if (docDir=='.') {
-        throw new Exception("""
+    if (docDir == '.') {
+        throw new Exception('''
 You are running docToolchain as git submodule.
 That is great!
 Currently, it is still configured to build its own manual,
@@ -89,7 +88,7 @@ You can do so by specifying it in your build.gradle or on the
 command line. Example:
 ./gradlew generateHTML -PdocDir=../.
 see https://docs-as-co.de/getstarted/tutorial2 for more details.
-        """)
+        ''')
     }
 }
 
@@ -107,8 +106,8 @@ apply from: 'scripts/exportContributors.gradle'
 apply from: 'scripts/exportJiraIssues.gradle'
 apply from: 'scripts/exportJiraSprintChangelog.gradle'
 apply from: 'scripts/exportExcel.gradle'
-if ((JavaVersion.current().getMajorVersion() as Integer)<17) {
-    logger.warn("WARNING: JavaVersion < 17 - exportMarkdown disabled")
+if ((JavaVersion.current().getMajorVersion() as Integer) < 17) {
+    logger.warn('WARNING: JavaVersion < 17 - exportMarkdown disabled')
 } else {
     apply from: 'scripts/exportMarkdown.gradle'
 }
@@ -132,68 +131,67 @@ task autobuildSite(
     description: 'linux: automatically re-build the static site every time a change in src/docs is detected') {
     // this is a stub ony to show some help for the "tasks" task
     // the real implementation can be found in /bin/doctoolchain
-
-}
-task prepareDist() {
+    }
+task prepareDist {
     if (!file("libs/org/docToolchain/core-${project.properties.dtc_version}.jar").exists()) {
         dependsOn gradle.includedBuild('core').task(':release-core')
     }
     doLast {
-        def distFolder = "dist/docToolchain-"+dtc_version
-        println "generate distribution for "+dtc_version
+        def distFolder = 'dist/docToolchain-' + dtc_version
+        println 'generate distribution for ' + dtc_version
         new File(buildDir, distFolder).mkdirs()
-        copy{
-            from new File("./bin")
-            into new File(buildDir, distFolder+"/bin")
+        copy {
+            from new File('./bin')
+            into new File(buildDir, distFolder + '/bin')
         }
-        copy{
-            from (new File("./gradle")) {
-                include "*"
-                include "**/*"
+        copy {
+            from(new File('./gradle')) {
+                include '*'
+                include '**/*'
             }
-            into new File(buildDir,distFolder+"/gradle")
+            into new File(buildDir, distFolder + '/gradle')
         }
-        copy{
-            from (new File("./resources")) {
-                include "*"
-                include "**/*"
+        copy {
+            from(new File('./resources')) {
+                include '*'
+                include '**/*'
             }
-            into new File(buildDir,distFolder+"/resources")
+            into new File(buildDir, distFolder + '/resources')
         }
-        copy{
-            from (new File("./libs")) {
-                include "*"
-                include "**/*"
+        copy {
+            from(new File('./libs')) {
+                include '*'
+                include '**/*'
             }
-            into new File(buildDir,distFolder+"/libs")
+            into new File(buildDir, distFolder + '/libs')
         }
-        copy{
-            from (new File("./core")) {
-                include "*"
-                include "**/*"
+        copy {
+            from(new File('./core')) {
+                include '*'
+                include '**/*'
             }
-            into new File(buildDir,distFolder+"/core")
+            into new File(buildDir, distFolder + '/core')
         }
-        copy{
-            from new File("./scripts")
-            into new File(buildDir,distFolder+"/scripts")
+        copy {
+            from new File('./scripts')
+            into new File(buildDir, distFolder + '/scripts')
         }
-        copy{
-            from (new File("./src/site")) {
-                include "*"
-                include "**/*"
+        copy {
+            from(new File('./src/site')) {
+                include '*'
+                include '**/*'
             }
-            into new File(buildDir,distFolder+"/src/site")
+            into new File(buildDir, distFolder + '/src/site')
         }
-        copy{
-            from (new File("./template_config")) {
-                include "*"
-                include "**/*"
+        copy {
+            from(new File('./template_config')) {
+                include '*'
+                include '**/*'
             }
-            into new File(buildDir,distFolder+"/template_config")
+            into new File(buildDir, distFolder + '/template_config')
         }
-        copy{
-            from (new File(".")) {
+        copy {
+            from(new File('.')) {
                 include '.gitmodules'
                 include 'build.gradle'
                 include 'gradle.properties'
@@ -204,16 +202,16 @@ task prepareDist() {
                 include 'settings.gradle'
                 include 'libs.versions.toml'
             }
-            into new File(buildDir,distFolder+"/.")
+            into new File(buildDir, distFolder + '/.')
         }
     }
 }
 task createDist(type: Zip, dependsOn: prepareDist) {
-    def distFolder = "dist"
-    from new File(buildDir,distFolder)
+    def distFolder = 'dist'
+    from new File(buildDir, distFolder)
     include '*'
     include '**/*' //to include contents of a folder present inside Reports directory
-    archiveFileName = 'docToolchain-'+dtc_version+'.zip'
+    archiveFileName = 'docToolchain-' + dtc_version + '.zip'
     destinationDirectory = buildDir
 }
 
@@ -226,12 +224,12 @@ task downloadDependencies {
         }
 
         [configurations, buildscript.configurations].each { config ->
-            config.findAll{ it.canBeResolved && !it.name?.startsWith("test")}.each {
-                println "-> " + it.name
+            config.findAll { it.canBeResolved && !it.name?.startsWith('test') }.each {
+                println '-> ' + it.name
                 it.resolve()
-            }
         }
     }
+}
 }
 
 // let's set a defaultTask for convenience

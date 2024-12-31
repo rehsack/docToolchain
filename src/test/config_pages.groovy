@@ -8,7 +8,7 @@ outputPath = 'build/test/docs'
 
 inputFiles = [
         [file: 'withPreamble.adoc',   formats: ['html']],
-        [file: 'withoutPreamble.adoc',formats: ['html']],
+        [file: 'withoutPreamble.adoc', formats: ['html']],
              ]
 
 taskInputsDirs = [

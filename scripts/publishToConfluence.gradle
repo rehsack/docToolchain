@@ -12,7 +12,7 @@ buildscript {
         if (file("libs/org/docToolchain/core-${project.properties.dtc_version}.jar").exists()) {
             classpath files("libs/org/docToolchain/core-${project.properties.dtc_version}.jar")
         } else {
-            classpath("org.docToolchain:core")
+            classpath('org.docToolchain:core')
         }
     }
 }
@@ -29,9 +29,9 @@ task verifyConfluenceApiAccess(
 ) {
     doLast {
         //TODO default should be false, if the V1 has been removed in cloud
-        config.confluence.useV1Api = findProperty("confluence.useV1Api") != null ?
-            findProperty("confluence.useV1Api") : config.confluence.useV1Api != [:] ?
-            config.confluence.useV1Api :true
+        config.confluence.useV1Api = findProperty('confluence.useV1Api') != null ?
+            findProperty('confluence.useV1Api') : config.confluence.useV1Api != [:] ?
+            config.confluence.useV1Api : true
         new VerifyConfluenceApiAccessTask(config).execute()
     }
 }
@@ -44,16 +44,15 @@ task wipeConfluenceSpace(
 ) {
     doLast {
         ant.input(message: "${'Do you really want to delete all pages in ' + config.confluence.spaceKey}", validargs: 'y,n', addproperty: 'confirm')
-        if(ant.confirm.toBoolean()) {
+        if (ant.confirm.toBoolean()) {
             //TODO default should be false, if the V1 has been removed in cloud
-            config.confluence.useV1Api = findProperty("confluence.useV1Api") != null ?
-                findProperty("confluence.useV1Api") : config.confluence.useV1Api != [:] ?
-                config.confluence.useV1Api :true
+            config.confluence.useV1Api = findProperty('confluence.useV1Api') != null ?
+                findProperty('confluence.useV1Api') : config.confluence.useV1Api != [:] ?
+                config.confluence.useV1Api : true
             new WipeConfluenceSpaceTask(config).execute()
         } else {
             println("Aborting wipe confluence space, this task needs to be confirmed with 'y'")
         }
-
     }
 }
 //end::wipeConfluenceSpace[]
@@ -64,12 +63,12 @@ task publishToConfluence(
         group: 'docToolchain'
 ) {
     doLast {
-        logger.info("docToolchain> docDir: "+docDir)
-        config.confluence.api = findProperty("confluence.api")?:config.confluence.api
+        logger.info('docToolchain> docDir: ' + docDir)
+        config.confluence.api = findProperty('confluence.api') ?: config.confluence.api
         //TODO default should be false, if the V1 has been removed in cloud
-        config.confluence.useV1Api = findProperty("confluence.useV1Api") != null ?
-            findProperty("confluence.useV1Api") : config.confluence.useV1Api != [:] ?
-            config.confluence.useV1Api :true
+        config.confluence.useV1Api = findProperty('confluence.useV1Api') != null ?
+            findProperty('confluence.useV1Api') : config.confluence.useV1Api != [:] ?
+            config.confluence.useV1Api : true
         Asciidoc2ConfluenceTask.From(config, docDir).execute()
     }
 }

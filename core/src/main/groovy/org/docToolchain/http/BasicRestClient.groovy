@@ -31,9 +31,9 @@ abstract class BasicRestClient {
             return Optional.ofNullable(httpClient.execute(targetHost, httpRequest, responseHandler))
         } catch (IOException e) {
             println("Error while executing request: \n" +
-                "request:" + httpRequest.getMethod() + " " + httpRequest.getUri() + ",\n" +
-                "targetHost:" + targetHost.toURI() + "\n" +
-                "reason:" + e.getMessage() + "\n"
+                'request:' + httpRequest.getMethod() + ' ' + httpRequest.getUri() + ",\n" +
+                'targetHost:' + targetHost.toURI() + "\n" +
+                'reason:' + e.getMessage() + "\n"
             )
             throw new RuntimeException(e)
         }
@@ -42,4 +42,5 @@ abstract class BasicRestClient {
     protected getHttpClientBuilder() {
         return httpClientBuilder
     }
+
 }

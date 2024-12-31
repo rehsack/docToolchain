@@ -8,18 +8,18 @@ class LinkTransformer {
     // TODO we should improve this part here, as it is not very clean
     protected List<Element> transformLinks(Element body,  anchors, pageAnchors, confluencePagePrefix, confluencePageSuffix, String jiraRestApiUrl, String jiraServerId) {
         def jiraBaseUrl
-        if(jiraRestApiUrl) {
+        if (jiraRestApiUrl) {
             URL url = new URL(jiraRestApiUrl)
-            String portPart = url.port == -1 || url.port == url.defaultPort ? "" : ":${url.port}"
+            String portPart = url.port == -1 || url.port == url.defaultPort ? '' : ":${url.port}"
             jiraBaseUrl = "${url.protocol}://${url.host}${portPart}"
         } else {
-            println(">>> WARN: No Jira API URL found in config, the Jira extension may not work as expected.")
+            println('>>> WARN: No Jira API URL found in config, the Jira extension may not work as expected.')
         }
         return body.select('a[href]').each { link ->
             def href = link.attr('href')
             if (href.startsWith('#')) {
                 rewriteInternalLinks(link, anchors, pageAnchors, confluencePagePrefix, confluencePageSuffix)
-            } else if (jiraBaseUrl && href.startsWith(jiraBaseUrl + "/browse/")) {
+            } else if (jiraBaseUrl && href.startsWith(jiraBaseUrl + '/browse/')) {
                 rewriteJiraLinks(link, jiraServerId)
             }
         }
@@ -47,8 +47,9 @@ class LinkTransformer {
         if (jiraServerId) {
             macroBlock += "<ac:parameter ac:name=\"serverId\">${jiraServerId}</ac:parameter>"
         }
-        macroBlock += "</ac:structured-macro>"
+        macroBlock += '</ac:structured-macro>'
         a.before(macroBlock)
         a.remove()
     }
+
 }

@@ -15,9 +15,10 @@ abstract class JiraClient {
         return restClient.doRequestAndFailIfNot20x(httpRequest)
     }
 
-    def abstract getIssuesByJql(String jql, String selectedFields)
+    abstract getIssuesByJql(String jql, String selectedFields)
 
-    def abstract getSprintsByBoardAndState(String boardId, String sprintState)
+    abstract getSprintsByBoardAndState(String boardId, String sprintState)
 
-    def abstract getIssuesForSprint(String boardId, Integer sprintId, String issueStatus, String ticketFields)
+    abstract getIssuesForSprint(String boardId, Integer sprintId, String issueStatus, String ticketFields)
+
 }

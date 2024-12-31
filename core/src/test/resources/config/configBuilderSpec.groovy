@@ -14,7 +14,7 @@ confluence = [:]
 
 confluence.with {
     input = [
-        [ file: "build/docs/html5/arc42-template-de.html" ],
+        [ file: 'build/docs/html5/arc42-template-de.html' ],
     ]
     api = 'https://my.confluence'
     spaceKey = 'asciidoc'

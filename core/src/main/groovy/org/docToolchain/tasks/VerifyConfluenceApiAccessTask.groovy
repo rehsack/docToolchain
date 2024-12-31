@@ -4,7 +4,7 @@ import java.util.logging.Logger
 
 class VerifyConfluenceApiAccessTask extends AbstractConfluenceTask {
 
-    Logger LOGGER = Logger.getLogger(VerifyConfluenceApiAccessTask.class.getName())
+    Logger LOGGER = Logger.getLogger(VerifyConfluenceApiAccessTask.getName())
 
     VerifyConfluenceApiAccessTask(ConfigObject config) {
         super(config)
@@ -12,7 +12,8 @@ class VerifyConfluenceApiAccessTask extends AbstractConfluenceTask {
 
     @Override
     void execute() {
-        LOGGER.info("Verifying confluence API access...")
+        LOGGER.info('Verifying confluence API access...')
         confluenceClient.verifyCredentials()
     }
+
 }

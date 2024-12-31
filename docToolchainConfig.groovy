@@ -16,7 +16,7 @@ inputFiles = [
         //[file: 'doctoolchain_demo.adoc',       formats: ['html','pdf']],
         //[file: 'arc42-template.adoc',    formats: ['html','pdf']],
         [file: 'manual_test_script.adoc',    formats: ['html', 'pdf']],
-	/** inputFiles **/
+    /** inputFiles **/
 ]
 
 //folders in which asciidoc will find images.
@@ -33,15 +33,15 @@ imageDirs = [
 // and generateSite (target ist prepended with build/microsite/output/)
 resourceDirs = [
     //[source: 'some/other/resource', target: 'target/directory']
-	/** resourceDirs **/
+    /** resourceDirs **/
 ]
 
 // these are directories (dirs) and files which Gradle monitors for a change
 // in order to decide if the docs have to be re-build
 taskInputsDirs = [
                     "${inputPath}",
-//                  "${inputPath}/src",
-//                  "${inputPath}/images",
+                 //                  "${inputPath}/src",
+                 //                  "${inputPath}/images",
                  ]
 
 taskInputsFiles = []
@@ -66,9 +66,9 @@ microsite.with {
     // is your microsite deployed with a context path?
     contextPath = ''
     // used as title in the template
-    title='Microsite'
+    title = 'Microsite'
     // used in the template for absolute uris
-    host='https://localhost'
+    host = 'https://localhost'
 
     //project theme
     //site folder relative to the docs folder
@@ -106,10 +106,10 @@ microsite.with {
     issuesBaseUrl = 'https://api.github.com/repos/doctoolchain/doctoolchain/issues'
     //
     // the base url for code files in github (set to 'null' to hide the "Improve this doc" link)
-    branch = System.getenv("DTC_PROJECT_BRANCH")?:'ng'
+    branch = System.getenv('DTC_PROJECT_BRANCH') ?: 'ng'
     gitRepoUrl = "https://github.com/doctoolchain/doctoolchain/edit/${branch}/src/docs"
 
-    rightColumnExtra = "training.html"
+    rightColumnExtra = 'training.html'
 
     // define a custom search html
     search = """<form id="searchForm" action="https://perplexity.ai" target="perplexity">
@@ -129,7 +129,6 @@ microsite.with {
         });
     </script>
     """
-
 
     /** end:microsite **/
 }
@@ -152,7 +151,6 @@ jbake.with {
 exportChangelog = [:]
 
 changelog.with {
-
     // Directory of which the exportChangelog task will export the changelog.
     // It should be relative to the docDir directory provided in the
     // gradle.properties file.
@@ -169,7 +167,6 @@ changelog.with {
     //
     // See also https://git-scm.com/docs/pretty-formats
     cmd = 'git log --pretty=format:%x7c%x20%ad%x20%n%x7c%x20%an%x20%n%x7c%x20%s%x20%n --date=short'
-
 }
 
 //*****************************************************************************************
@@ -208,7 +205,7 @@ confluence = [:]
 // only 'file' or 'url' is allowed. If both are given, 'url' is ignored
 confluence.with {
     input = [
-            [ file: "build/html5/arc42-template-de.html" ],
+            [ file: 'build/html5/arc42-template-de.html' ],
     ]
 
     inputHtmlFolder = ''
@@ -267,7 +264,6 @@ confluence.with {
     // default attachmentPrefix = attachment - All files to attach will require to be linked inside the document.
     // attachmentPrefix = "attachment"
 
-
     // Optional proxy configuration, only used to access Confluence
     // schema supports http and https
     // proxy = [host: 'my.proxy.com', port: 1234, schema: 'http']
@@ -302,14 +298,13 @@ exportEA.with {
 // exportPath = "src/docs/"
 // OPTIONAL: relative path to base 'docDir', in which Enterprise Architect project files are searched
 // searchPath = "src/docs/"
-
 }
 //end::exportEAConfig[]
 
 //tag::htmlSanityCheckConfig[]
 htmlSanityCheck.with {
-    //sourceDir = "build/html5/site"
-    //checkingResultsDir =
+//sourceDir = "build/html5/site"
+//checkingResultsDir =
 }
 //end::htmlSanityCheckConfig[]
 
@@ -318,7 +313,6 @@ htmlSanityCheck.with {
 jira = [:]
 
 jira.with {
-
     // endpoint of the JiraAPI (REST) to be used
     api = 'https://your-jira-instance'
 
@@ -343,7 +337,7 @@ jira.with {
     dateTimeFormatParse = "yyyy-MM-dd'T'H:m:s.SSSz" // i.e. 2020-07-24'T'9:12:40.999 CEST
 
     // the format in which the date time should be saved to output
-    dateTimeFormatOutput = "dd.MM.yyyy HH:mm:ss z" // i.e. 24.07.2020 09:02:40 CEST
+    dateTimeFormatOutput = 'dd.MM.yyyy HH:mm:ss z' // i.e. 24.07.2020 09:02:40 CEST
 
     // the label to restrict search to
     label =
@@ -368,7 +362,7 @@ jira.with {
     */
     exports = [
         [
-            filename:"File1_Done_issues",
+            filename:'File1_Done_issues',
             jql:"project='%jiraProject%' AND status='Done' ORDER BY duedate ASC",
             customfields: [customfield_10026:'Story Points']
         ],
@@ -402,7 +396,7 @@ openApi.with {
 sprintChangelog = [:]
 sprintChangelog.with {
     sprintState = 'closed' // it is possible to define multiple states, i.e. 'closed, active, future'
-    ticketStatus = "Done, Closed" // it is possible to define multiple ticket statuses, i.e. "Done, Closed, 'in Progress'"
+    ticketStatus = 'Done, Closed' // it is possible to define multiple ticket statuses, i.e. "Done, Closed, 'in Progress'"
 
     showAssignee = false
     showTicketStatus = false

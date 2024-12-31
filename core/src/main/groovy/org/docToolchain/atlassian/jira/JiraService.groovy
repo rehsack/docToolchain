@@ -12,7 +12,7 @@ import java.util.logging.Logger
 
 class JiraService {
 
-    private static final Logger LOGGER = Logger.getLogger(JiraService.class.getName())
+    private static final Logger LOGGER = Logger.getLogger(JiraService.getName())
 
     final File outputFolder
     protected File targetFolder
@@ -26,33 +26,33 @@ class JiraService {
         this.jiraConfig = configService.getFlatConfigSubTree('jira')
         this.changeLogConfig = configService.getFlatConfigSubTree('sprintChangelog')
         //TODO targetDir is currently dependend on Gradle
-        String targetDir = configService.getConfigProperty("targetDir")
+        String targetDir = configService.getConfigProperty('targetDir')
         this.outputFolder = new File(targetDir)
-        if (!outputFolder.exists()){
+        if (!outputFolder.exists()) {
             outputFolder.mkdirs()
         }
     }
 
-    def exportJira(){
+    def exportJira() {
         //TODO this is currently a workaround, this will change in the future
         String taskSubFolderName = jiraConfig.resultsFolder
         this.targetFolder = new File(outputFolder.getAbsolutePath() + File.separator + taskSubFolderName)
-        if (!targetFolder.exists()){
+        if (!targetFolder.exists()) {
             targetFolder.mkdirs()
         }
         registerConverters()
         // end of workaround
-        if(jiraConfig.iql){
+        if (jiraConfig.iql) {
             LegacyJiraProcessor.processLegacyRequests(targetFolder, jiraConfig, jiraClient)
         }
         HashSet jiraExports = jiraConfig.exports as HashSet ?: []
         transformAndMergeLegacyConfiguration(jiraExports)
-        jiraExports.each {export ->
+        jiraExports.each { export ->
                 process(export)
-            }
+        }
     }
 
-    def exportJiraSprintChangelog(){
+    def exportJiraSprintChangelog() {
         List<String> columns = new ArrayList<String>(List.of(
             'key',
             'summary',
@@ -64,7 +64,7 @@ class JiraService {
         //TODO this is currently a workaround, this will change in the future
         String taskSubFolderName = changeLogConfig.resultsFolder
         this.targetFolder = new File(outputFolder.getAbsolutePath() + File.separator + taskSubFolderName)
-        if (!targetFolder.exists()){
+        if (!targetFolder.exists()) {
             targetFolder.mkdirs()
         }
         registerConverters()
@@ -85,24 +85,23 @@ class JiraService {
         LOGGER.info("Filtering for issues with configured statuses: ${ticketStatusForReleaseNotes}")
         LOGGER.info("Attempt to generate release notes for sprint with a name: '${sprintName}'")
         LOGGER.info("Filename used for all sprints: '${allSprintsFilename}'")
-        if (!showAssignee) { columns = columns.minus('assignee')}
-        if (!showTicketStatus) { columns = columns.minus('status')}
-        if (!showTicketType) { columns = columns.minus('issuetype')}
+        if (!showAssignee) { columns = columns.minus('assignee') }
+        if (!showTicketStatus) { columns = columns.minus('status') }
+        if (!showTicketType) { columns = columns.minus('issuetype') }
         LOGGER.info("Release notes will contain following info: ${columns}")
 
-        ((ExcelConverter) converters.find() { it instanceof ExcelConverter })?.prepareWorkbook(allSprintsFilename as String)
-
+        ((ExcelConverter) converters.find { it instanceof ExcelConverter })?.prepareWorkbook(allSprintsFilename as String)
 
         def allMatchedSprints = jiraClient.getSprintsByBoardAndState(sprintBoardId, sprintState).values
-        def foundExactSprint = allMatchedSprints.any {it.name == sprintName}
+        def foundExactSprint = allMatchedSprints.any { it.name == sprintName }
         LOGGER.info("All sprints that matched configuration: ${allMatchedSprints.size()}")
 
-        def sprintsForChangelog = foundExactSprint ? allMatchedSprints.stream().filter() {it.name == sprintName} : allMatchedSprints
+        def sprintsForChangelog = foundExactSprint ? allMatchedSprints.stream().filter { it.name == sprintName } : allMatchedSprints
         LOGGER.info("Found exact Sprint with name '${sprintName}': ${foundExactSprint}.")
         sprintsForChangelog.each { sprint ->
             LOGGER.finer("\nSprint: $sprint.name [id: $sprint.id] state <$sprint.state>")
-            converters.find() { it instanceof AsciiDocConverter }?.initialize(sprint.name.replaceAll(" ", "_") as String, columns, ".Table ${sprint.name} Changelog\n")
-            converters.find() { it instanceof ExcelConverter }?.initialize(sprint.name as String, columns)
+            converters.find { it instanceof AsciiDocConverter }?.initialize(sprint.name.replaceAll(' ', '_') as String, columns, ".Table ${sprint.name} Changelog\n")
+            converters.find { it instanceof ExcelConverter }?.initialize(sprint.name as String, columns)
             jiraClient.getIssuesForSprint(sprintBoardId, sprint.id, ticketStatusForReleaseNotes, columns.join(',')).issues.each { issue ->
                 converters.each { converter ->
                     converter.convertAndAppend(issue, jiraRoot, jiraConfig.dateTimeFormatParse, jiraConfig.dateTimeFormatOutput, showAssignee, showTicketStatus, showTicketType, false, false, false, [:])
@@ -114,23 +113,23 @@ class JiraService {
         }
     }
 
-    private void registerConverters(){
-        if(jiraConfig.saveAsciidoc){
+    private void registerConverters() {
+        if (jiraConfig.saveAsciidoc) {
             converters.add(new AsciiDocConverter(targetFolder))
         } else {
-            println("Set saveAsciidoc=true your config to save results in AsciiDoc file")
+            println('Set saveAsciidoc=true your config to save results in AsciiDoc file')
         }
-        if(jiraConfig.saveExcel){
+        if (jiraConfig.saveExcel) {
             converters.add(new ExcelConverter(targetFolder))
         } else {
-            println("Set saveExcel=true your config to save results in Excel file")
+            println('Set saveExcel=true your config to save results in Excel file')
         }
     }
 
-    private void transformAndMergeLegacyConfiguration(HashSet jiraExports){
+    private void transformAndMergeLegacyConfiguration(HashSet jiraExports) {
         HashSet legacyConfig = jiraConfig.requests as HashSet
-        if(legacyConfig){
-            LOGGER.info("Merging legacy Jira config with new Jira config")
+        if (legacyConfig) {
+            LOGGER.info('Merging legacy Jira config with new Jira config')
             jiraExports.addAll(LegacyJiraProcessor.transformLegacyConfiguration(legacyConfig))
         }
     }
@@ -151,13 +150,13 @@ class JiraService {
         String jiraLabel = jiraConfig.label
         String jiraDateTimeFormatParse = jiraConfig.dateTimeFormatParse
         String jiraDateTimeOutput = jiraConfig.dateTimeFormatOutput
-        String jql = export.get("jql")
-        String targetFileName = export.get("filename")
-        Map<String,String> customFields = export.get("customfields")
+        String jql = export.get('jql')
+        String targetFileName = export.get('filename')
+        Map<String,String> customFields = export.get('customfields')
 
         LOGGER.fine("Request to Jira API for '${targetFileName}' with query: '${jql}'")
 
-        def allFieldIds = "${columns.join(",")},${customFields.keySet().join(",")}"
+        def allFieldIds = "${columns.join(',')},${customFields.keySet().join(',')}"
 
         columns.addAll(customFields.values())
 
@@ -178,4 +177,5 @@ class JiraService {
             converter.finalizeOutput()
         }
     }
+
 }

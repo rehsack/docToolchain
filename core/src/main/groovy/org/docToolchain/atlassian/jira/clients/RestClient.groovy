@@ -27,21 +27,21 @@ class RestClient extends BasicRestClient {
         initialize()
     }
 
-    def doRequestAndFailIfNot20x(ClassicHttpRequest httpRequest){
+    def doRequestAndFailIfNot20x(ClassicHttpRequest httpRequest) {
         rateLimiter.acquire()
         return doRequest(targetHost, httpRequest, new RestClientResponseHandler())
             .map(response -> new JsonSlurper().parseText(response))
             .orElse(null)
     }
 
-    private initialize(){
+    private initialize() {
         this.rateLimiter = RateLimiter.create(configService.getConfigProperty('jira.rateLimit') as Double ?: 10)
         this.headers = constructDefaultHeaders()
         this.targetHost = constructTargetHost()
         httpClientBuilder.setDefaultHeaders(headers)
     }
 
-    private constructDefaultHeaders(){
+    private constructDefaultHeaders() {
         String basicAuthCredentials = configService.getConfigProperty('jira.credentials')
         HashSet<Header> headers = new HashSet<>([
             new BasicHeader('Content-Type', 'application/json;charset=utf-8'),
@@ -50,7 +50,7 @@ class RestClient extends BasicRestClient {
         return headers
     }
 
-    private constructTargetHost(){
+    private constructTargetHost() {
         String apiConfigItem = configService.getConfigProperty('jira.api')
         URIBuilder builder = new URIBuilder(apiConfigItem)
         return new HttpHost(builder.getScheme(), builder.getHost(), builder.getPort())
@@ -69,23 +69,25 @@ class RestClient extends BasicRestClient {
 
         @Override
         String handleResponse(ClassicHttpResponse response) throws HttpException, IOException {
-            final HttpEntity entity = response.getEntity();
+            final HttpEntity entity = response.getEntity()
             if (response.getCode() < HttpStatus.SC_OK || response.getCode() > HttpStatus.SC_PARTIAL_CONTENT) {
                 EntityUtils.consume(entity)
                 println(response.getHeaders())
                 throw new RequestFailedException(response, null)
             }
-            return entity == null ? null : handleEntity(entity);
+            return entity == null ? null : handleEntity(entity)
         }
 
         private String handleEntity(final HttpEntity entity) throws IOException {
             try {
-                return EntityUtils.toString(entity);
+                return EntityUtils.toString(entity)
             } catch (final ParseException ex) {
-                throw new ClientProtocolException(ex);
+                throw new ClientProtocolException(ex)
             } finally {
-                EntityUtils.consumeQuietly(entity);
+                EntityUtils.consumeQuietly(entity)
             }
         }
+
     }
+
 }

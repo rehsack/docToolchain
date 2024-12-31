@@ -53,10 +53,10 @@ class CodeBlockTransformer {
                     language = 'text'
                 }
                 // #1265 - pacoVK: fix for nested CDATA sections in XML code blocks
-                if (language.equals("xml")) {
+                if (language.equals('xml')) {
                     String xmlDocument = code.wholeOwnText()
-                    if (xmlDocument.contains("<![CDATA[") && xmlDocument.contains("]]>")) {
-                        xmlDocument = xmlDocument.replaceAll("]]>", "]]]]><![CDATA[>")
+                    if (xmlDocument.contains('<![CDATA[') && xmlDocument.contains(']]>')) {
+                        xmlDocument = xmlDocument.replaceAll(']]>', ']]]]><![CDATA[>')
                         code.text(xmlDocument)
                     }
                 }
@@ -72,17 +72,18 @@ class CodeBlockTransformer {
                 i.unwrap()
             }
             code.select('b').each { b ->
-                b.before(" // ")
+                b.before(' // ')
                 b.unwrap()
             }
             code.before("<ac:parameter ac:name=\"language\">${language}</ac:parameter>")
             code.parent() // pre now
                 .wrap('<ac:structured-macro ac:name="code"></ac:structured-macro>')
                 .unwrap()
-            code.wrap("<ac:plain-text-body>" +
+            code.wrap('<ac:plain-text-body>' +
                 "${ConfluenceTags.CDATA_PLACEHOLDER_START}${ConfluenceTags.CDATA_PLACEHOLDER_END}" +
-                "</ac:plain-text-body>")
+                '</ac:plain-text-body>')
                 .unwrap()
         }
     }
+
 }

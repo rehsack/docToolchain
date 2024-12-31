@@ -23,7 +23,7 @@ task exportMarkdown(
 ) {
     from srcDir
 
-    include("**/*.md") //include only markdown files
+    include('**/*.md') //include only markdown files
     includeEmptyDirs = false
     rename(/(.+).md/, '$1.adoc') //rename all files from *.md to *.adoc
     filter(Markdown2AdocFilter) // convert the content of the files
@@ -32,8 +32,10 @@ task exportMarkdown(
 }
 
 class Markdown2AdocFilter extends FilterReader {
+
     Markdown2AdocFilter(Reader input) {
         super(new StringReader(nl.jworks.markdown_to_asciidoc.Converter.convertMarkdownToAsciiDoc(input.text)))
     }
+
 }
 //end::exportMarkdown[]

@@ -48,7 +48,7 @@ class ExcelConverter extends IssueConverter {
 
     @Override
     def initialize(String fileName, List<String> columns, String caption) {
-        if(workbook == null) {
+        if (workbook == null) {
             prepareWorkbook(fileName)
         }
         this.columns = columns
@@ -56,7 +56,7 @@ class ExcelConverter extends IssueConverter {
         String safeSheetName = WorkbookUtil.createSafeSheetName(caption)
         this.workSheet = workbook.createSheet(safeSheetName)
 
-        String rgbS = "A7A7A7"
+        String rgbS = 'A7A7A7'
         byte[] rgbB = Hex.decodeHex(rgbS)
         XSSFColor color = new XSSFColor(rgbB, null) //IndexedColorMap has no usage until now. So it can be set null.
         XSSFCellStyle headerCellStyle = (XSSFCellStyle) workbook.createCellStyle()
@@ -87,13 +87,13 @@ class ExcelConverter extends IssueConverter {
         cellWithUrl.setHyperlink(link)
 
         //TODO this is a workaround and this will be removed when we will have a better solution
-        if(showPriority) {
+        if (showPriority) {
             row.createCell(++cellPosition).setCellValue("${issue.fields.priority.name}")
         }
-        if(showCreatedDate) {
+        if (showCreatedDate) {
             row.createCell(++cellPosition).setCellValue("${DateUtil.format(issue.fields.created, jiraDateTimeFormatParse, jiraDateTimeOutput)}")
         }
-        if(showResolvedDate) {
+        if (showResolvedDate) {
             row.createCell(++cellPosition).setCellValue("${issue.fields.resolutiondate ? DateUtil.format(issue.fields.resolutiondate, jiraDateTimeFormatParse, jiraDateTimeOutput) : ''}")
         }
         // end of workaround
@@ -112,18 +112,19 @@ class ExcelConverter extends IssueConverter {
         // Custom fields
         customFields.each { field ->
             def position = ++cellPosition
-            def foundCustom = issue.fields.find {it.key == field.key}
+            def foundCustom = issue.fields.find { it.key == field.key }
             row.createCell(position).setCellValue("${foundCustom ? foundCustom.value : '-'}")
         }
-    }
+                         }
 
     @Override
     def finalizeOutput() {
-        for(int colNum = 0; colNum<columns.size()+1;colNum++) {
+        for (int colNum = 0; colNum < columns.size() + 1; colNum++) {
             workSheet.autoSizeColumn(colNum)
         }
         // Set summary column width slightly wider but fixed size, so it doesn't change with every summary update
-        workSheet.setColumnWidth(4, 25*384)
+        workSheet.setColumnWidth(4, 25 * 384)
         workbook.write(jiraFos)
     }
+
 }

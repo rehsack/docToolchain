@@ -6,7 +6,7 @@ import java.util.logging.Logger
 
 class ExportJiraIssuesTask extends DocToolchainTask {
 
-    Logger LOGGER = Logger.getLogger(ExportJiraIssuesTask.class.getName())
+    Logger LOGGER = Logger.getLogger(ExportJiraIssuesTask.getName())
 
     JiraService jiraService
 
@@ -17,7 +17,8 @@ class ExportJiraIssuesTask extends DocToolchainTask {
 
     @Override
     void execute() {
-        LOGGER.info("Starting Jira Export...")
+        LOGGER.info('Starting Jira Export...')
         jiraService.exportJira()
     }
+
 }

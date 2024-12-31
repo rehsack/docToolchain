@@ -7,8 +7,8 @@ task exportChangeLog(
         new File(targetDir).mkdirs()
     }
     doLast {
-        logger.info("docToolchain> docDir: "+docDir)
-        logger.info("docToolchain> mainConfigFile: "+mainConfigFile)
+        logger.info('docToolchain> docDir: ' + docDir)
+        logger.info('docToolchain> mainConfigFile: ' + mainConfigFile)
         def config = new ConfigSlurper().parse(new File(docDir, mainConfigFile).text)
 
         def cmd = "${config.changelog.cmd} ."

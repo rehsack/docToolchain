@@ -17,16 +17,15 @@ apply plugin: 'org.openapi.generator'
 def specFile = config.openApi.specFile
 
 //tag::exportOpenApi[]
-task exportOpenApi (
+task exportOpenApi(
         type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask,
         group: 'docToolchain',
         description: 'exports OpenAPI specification to the asciidoc file') {
-
     if (!specFile) {
         logger.info("\n---> OpenAPI specification file not found in Config.groovy (https://doctoolchain.github.io/docToolchain/#_exportopenapi)")
         return
     } else {
-        logger.info("Found OpenAPI specification in Config.groovy")
+        logger.info('Found OpenAPI specification in Config.groovy')
     }
 
     outputs.upToDateWhen { false }
@@ -47,5 +46,5 @@ task exportOpenApi (
         infoEmail:"${config.openApi.infoEmail}",
         infoUrl:"${config.openApi.infoUrl}"
     ]
-}
+        }
 //end::exportOpenApi[]

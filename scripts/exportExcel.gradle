@@ -29,7 +29,7 @@ task exportExcel(
         //make sure path for notes exists
         exportFileDir.deleteDir()
         //create a readme to clarify things
-        def readme = """This folder contains exported workbooks from Excel.
+        def readme = '''This folder contains exported workbooks from Excel.
 
 Please note that these are generated files but reside in the `src`-folder in order to be versioned.
 
@@ -40,7 +40,7 @@ This is to make sure that they can be used from environments other than windows.
 **The contents of this folder will be overwritten with each re-export!**
 
 use `gradle exportExcel` to re-export files
-"""
+'''
         exportFileDir.mkdirs()
         new File(exportFileDir, '/readme.ad').write(readme)
     }
@@ -49,12 +49,12 @@ use `gradle exportExcel` to re-export files
         def exportFileDir = new File(sourceDir, 'excel')
         def tree = fileTree(srcDir).include('**/*.xlsx').exclude('**/~*')
 
-        def nl = System.getProperty("line.separator")
+        def nl = System.getProperty('line.separator')
 
         def export = { sheet, evaluator, targetFileName ->
             def targetFileCSV = new File(targetFileName + '.csv')
             def targetFileAD = new File(targetFileName + '.adoc')
-            def df = new org.apache.poi.ss.usermodel.DataFormatter();
+            def df = new org.apache.poi.ss.usermodel.DataFormatter()
             def regions = []
             sheet.numMergedRegions.times {
                 regions << sheet.getMergedRegion(it)
@@ -65,7 +65,7 @@ use `gradle exportExcel` to re-export files
             def numCols = 0
             def headerCreated = false
             def emptyRows = 0
-            for (int rowNum=0; rowNum<=sheet.lastRowNum; rowNum++) {
+            for (int rowNum = 0; rowNum <= sheet.lastRowNum; rowNum++) {
                 def row = sheet.getRow(rowNum)
                 if (row && !headerCreated) {
                     headerCreated = true
@@ -84,14 +84,14 @@ use `gradle exportExcel` to re-export files
                 def style = []
                 def colors = []
                 // For each row, iterate through each columns
-                if (row && (row?.lastCellNum!=-1)) {
+                if (row && (row?.lastCellNum != -1)) {
                     numCols.times { columnIndex ->
                         def cell = row.getCell(columnIndex)
                         if (cell) {
                             def cellValue = df.formatCellValue(cell, evaluator)
                             if (cellValue.startsWith('*') && cellValue.endsWith('\u20AC')) {
                                 // Remove special characters at currency
-                                cellValue = cellValue.substring(1).trim();
+                                cellValue = cellValue.substring(1).trim()
                             }
                             def cellStyle = ''
                             def region = regions.find { it.isInRange(cell.rowIndex, cell.columnIndex) }
@@ -107,7 +107,7 @@ use `gradle exportExcel` to re-export files
                                     if (colspan > 1) {
                                         cellStyle += ".${colspan}"
                                     }
-                                    cellStyle += "+"
+                                    cellStyle += '+'
                                 } else {
                                     skipCell = true
                                 }
@@ -133,7 +133,7 @@ use `gradle exportExcel` to re-export files
                                 color = color != null ? nl + "{set:cellbgcolor:#${color}}" : ''
                                 data << cellValue
                                 if (color == '' && resetColor) {
-                                    colors << nl + "{set:cellbgcolor!}"
+                                    colors << nl + '{set:cellbgcolor!}'
                                     resetColor = false
                                 } else {
                                     colors << color
@@ -143,25 +143,24 @@ use `gradle exportExcel` to re-export files
                                 }
                                 style << cellStyle
                             } else {
-                                data << ""
-                                colors << ""
-                                style << "skip"
+                                data << ''
+                                colors << ''
+                                style << 'skip'
                             }
                         } else {
-                            data << ""
-                            colors << ""
-                            style << ""
+                            data << ''
+                            colors << ''
+                            style << ''
                         }
-
                     }
                     emptyRows = 0
                 } else {
-                    if (emptyRows<3) {
+                    if (emptyRows < 3) {
                         //insert empty row
                         numCols.times {
-                            data << ""
-                            colors << ""
-                            style << ""
+                            data << ''
+                            colors << ''
+                            style << ''
                         }
                         emptyRows++
                     } else {
@@ -171,8 +170,8 @@ use `gradle exportExcel` to re-export files
 
                 targetFileCSV.append(data
                         .collect {
-                    "\"${it.replaceAll('"', '""')}\""
-                }
+                            "\"${it.replaceAll('"', '""')}\""
+            }
                 .join(',') + nl, 'UTF-8')
 
                 // fix #1192 https://github.com/docToolchain/docToolchain/issues/1192
@@ -181,11 +180,11 @@ use `gradle exportExcel` to re-export files
                 def removed = []
                 def useRemoved = true
                 style.eachWithIndex { s, i ->
-                    if (s!="skip") {
+                    if (s != 'skip') {
                         if (s.contains('+')) {
                             def span = s.split('[+]')[0].split('[.]')
-                            def current = ""
-                            if (span.size()>1) {
+                            def current = ''
+                            if (span.size() > 1) {
                                 current = span[1]
                             }
                             if (span[0] != '') {
@@ -204,7 +203,7 @@ use `gradle exportExcel` to re-export files
                             useRemoved = false
                         }
                     } else {
-                        removed << "skip"
+                        removed << 'skip'
                     }
                 }
                 if (useRemoved) { style = removed }
@@ -213,36 +212,35 @@ use `gradle exportExcel` to re-export files
                 targetFileAD.append(data
                         .withIndex()
                         .collect { value, index ->
-                    if (style[index] == "skip") {
-                        ""
+                            if (style[index] == 'skip') {
+                        ''
                     } else {
                         style[index] + "| ${value.replaceAll('[|]', '{vbar}').replaceAll("\n", ' +$0') + colors[index]}"
-                    }
-                }
+                            }
+                        }
                 .join(nl) + nl * 2, 'UTF-8')
-            }
+        }
             targetFileAD.append('|===' + nl)
             // rewrite file to remove consecutive nl
-            targetFileAD.write(targetFileAD.text.replaceAll("(?m)(\\r?\\n){2,}", nl+nl))
-        }
-
+            targetFileAD.write(targetFileAD.text.replaceAll("(?m)(\\r?\\n){2,}", nl + nl))
+    }
 
         tree.each { File excel ->
-            println "file: " + excel
+            println 'file: ' + excel
             def excelDir = new File(exportFileDir, excel.getName())
             excelDir.mkdirs()
             InputStream inp
             inp = new FileInputStream(excel)
-            def wb = org.apache.poi.ss.usermodel.WorkbookFactory.create(inp);
-            def evaluator = wb.getCreationHelper().createFormulaEvaluator();
+            def wb = org.apache.poi.ss.usermodel.WorkbookFactory.create(inp)
+            def evaluator = wb.getCreationHelper().createFormulaEvaluator()
             for (int wbi = 0; wbi < wb.getNumberOfSheets(); wbi++) {
                 def sheetName = wb.getSheetAt(wbi).getSheetName()
-                println " -- sheet: " + sheetName
+                println ' -- sheet: ' + sheetName
                 def targetFile = new File(excelDir, sheetName)
                 export(wb.getSheetAt(wbi), evaluator, targetFile.getAbsolutePath())
             }
-            inp.close();
+            inp.close()
         }
-    }
+}
 }
 //end::exportExcel[]

@@ -2,7 +2,7 @@
 
 config.customTasks?.each { task ->
     println "include custom task $task"
-    apply from: docDir+'/'+task
+    apply from: docDir + '/' + task
 }
 
 task createTask(
@@ -10,8 +10,8 @@ task createTask(
         group: 'docToolchain'
 ) {
     doLast {
-        def file = new File(docDir+'/scripts/customTask.gradle')
-        new File(docDir+"/scripts").mkdirs()
+        def file = new File(docDir + '/scripts/customTask.gradle')
+        new File(docDir + '/scripts').mkdirs()
         file.write("""\
 task customTask (
         description: 'a custom task',
@@ -22,9 +22,9 @@ task customTask (
     }
 }
 """)
-        def config = new File(docDir+'/'+mainConfigFile)
+        def config = new File(docDir + '/' + mainConfigFile)
         config.write(config.text.replaceAll(
-            "/[*][*] customTasks [*][*]/",
+            '/[*][*] customTasks [*][*]/',
             "'scripts/customTask.gradle',\n\t\t/** customTasks **/"
         ))
         println """

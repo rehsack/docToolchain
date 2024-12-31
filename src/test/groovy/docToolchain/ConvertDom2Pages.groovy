@@ -1,14 +1,14 @@
 package docToolchain
 
+import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
+import static org.gradle.testkit.runner.TaskOutcome.UP_TO_DATE
+
 import org.gradle.testkit.runner.GradleRunner
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.parser.Parser
 import spock.lang.Specification
 import spock.lang.Unroll
-
-import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
-import static org.gradle.testkit.runner.TaskOutcome.UP_TO_DATE
 
 class ConvertDom2Pages extends Specification {
 
@@ -27,22 +27,22 @@ class ConvertDom2Pages extends Specification {
     void 'test layers with preamble'() {
         setup: 'load org.docToolchain.scripts.asciidoc2confluence'
         GroovyShell shell = setupShell()
-        def script = shell.parse(new File("./core/src/main/groovy/org/docToolchain/scripts/asciidoc2confluence.groovy"))
+        def script = shell.parse(new File('./core/src/main/groovy/org/docToolchain/scripts/asciidoc2confluence.groovy'))
 
         when: 'convert to HTML'
         def result = GradleRunner.create()
             .withProjectDir(new File('.'))
-            .withArguments(['generateHTML','--info', '-PmainConfigFile=./src/test/config_pages.groovy'])
+            .withArguments(['generateHTML', '--info', '-PmainConfigFile=./src/test/config_pages.groovy'])
             .build()
         def htmlFile = new File('./build/test/docs/html5/withPreamble.html')
 
         then: 'HTML successfully created'
-        result.task(":generateHTML").outcome == SUCCESS || result.task(":generateHTML").outcome == UP_TO_DATE
+        result.task(':generateHTML').outcome == SUCCESS || result.task(':generateHTML').outcome == UP_TO_DATE
         htmlFile.exists()
 
         when: 'run getPages'
         Document dom = Jsoup.parse(htmlFile.getText('utf-8'), 'utf-8', Parser.xmlParser())
-        def (pages, anchors, pageAnchors) = script.getPages(dom, "42", layers)
+        def (pages, anchors, pageAnchors) = script.getPages(dom, '42', layers)
 
         then: 'the pages are given'
         pages.size() == 1
@@ -146,22 +146,22 @@ class ConvertDom2Pages extends Specification {
     void 'test layers without preamble'() {
         setup: 'load org.docToolchain.scripts.asciidoc2confluence'
         GroovyShell shell = setupShell()
-        def script = shell.parse(new File("./core/src/main/groovy/org/docToolchain/scripts/asciidoc2confluence.groovy"))
+        def script = shell.parse(new File('./core/src/main/groovy/org/docToolchain/scripts/asciidoc2confluence.groovy'))
 
         when: 'convert to HTML'
         def result = GradleRunner.create()
             .withProjectDir(new File('.'))
-            .withArguments(['generateHTML','--info', '-PmainConfigFile=./src/test/config_pages.groovy'])
+            .withArguments(['generateHTML', '--info', '-PmainConfigFile=./src/test/config_pages.groovy'])
             .build()
         def htmlFile = new File('./build/test/docs/html5/withoutPreamble.html')
 
         then: 'HTML successfully created'
-        result.task(":generateHTML").outcome == SUCCESS || result.task(":generateHTML").outcome == UP_TO_DATE
+        result.task(':generateHTML').outcome == SUCCESS || result.task(':generateHTML').outcome == UP_TO_DATE
         htmlFile.exists()
 
         when: 'run getPages'
         Document dom = Jsoup.parse(htmlFile.getText('utf-8'), 'utf-8', Parser.xmlParser())
-        def (pages, anchors, pageAnchors) = script.getPages(dom, "42", layers)
+        def (pages, anchors, pageAnchors) = script.getPages(dom, '42', layers)
 
         then: 'the pages are given'
         assertion(pages)
@@ -256,11 +256,12 @@ class ConvertDom2Pages extends Specification {
         Document dom = Jsoup.parse(html, 'utf-8', Parser.xmlParser())
         def headingMatches = []
         if (headings.size() > 0) {
-            headingMatches = (1..headings.size()).collect {i ->
+            headingMatches = (1..headings.size()).collect { i ->
                 dom.select("h${i}").text() == headings[i - 1]
             }
         }
         return dom.select('p').text() == body &&
             headingMatches.inject(true) { m1, m2 -> m1 && m2 }
     }
+
 }

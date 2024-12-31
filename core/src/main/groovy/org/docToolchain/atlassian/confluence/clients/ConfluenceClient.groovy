@@ -13,9 +13,9 @@ import org.docToolchain.configuration.ConfigService
 
 abstract class ConfluenceClient {
 
-    private final String API_DEFAULT_CONTEXT = "wiki"
-    private final String API_V1_IDENTIFIER = "/rest/api"
-    private final String API_V2_IDENTIFIER = "/api/v2"
+    private final String API_DEFAULT_CONTEXT = 'wiki'
+    private final String API_V1_IDENTIFIER = '/rest/api'
+    private final String API_V2_IDENTIFIER = '/api/v2'
     protected final String API_V1_PATH
     protected final String API_V2_PATH
     protected final String editorVersion
@@ -35,32 +35,32 @@ abstract class ConfluenceClient {
     private String constructApiContext(String configItem) {
         URIBuilder builder = new URIBuilder(configItem)
         String apiContext = determineApiContext(builder.getPath())
-        if(!apiContext.isEmpty()){
-            return "/" + apiContext
+        if (!apiContext.isEmpty()) {
+            return '/' + apiContext
         } else {
-            return ""
+            return ''
         }
     }
 
     private determineApiContext(String apiPath) {
         // either no path or just a single slash
-        if(apiPath.length() <= 1){
+        if (apiPath.length() <= 1) {
             // no context has been set
             return API_DEFAULT_CONTEXT
         }
         // remove leading slash, remove api versions identifier from path
         apiPath = apiPath
             .substring(1)
-            .replace(API_V1_IDENTIFIER, "")
-            .replace(API_V2_IDENTIFIER, "")
+            .replace(API_V1_IDENTIFIER, '')
+            .replace(API_V2_IDENTIFIER, '')
         // then split by slash to get the context
-        String[] pathParts = apiPath.split("/")
-        if(pathParts.size() == 1){
+        String[] pathParts = apiPath.split('/')
+        if (pathParts.size() == 1) {
             // context has been set
             return pathParts[0]
         }
         // assume that context has been omitted intentionally https://docs.atlassian.com/ConfluenceServer/rest/8.6.1/
-        return ""
+        return ''
     }
 
     abstract verifyCredentials()
@@ -79,8 +79,8 @@ abstract class ConfluenceClient {
         HttpPost post = new HttpPost(uri)
         HttpEntity entity = MultipartEntityBuilder.create()
             .setMode(HttpMultipartMode.EXTENDED)
-            .addPart("file", new InputStreamBody(inputStream, fileName))
-            .addPart("comment", new StringBody(note + "\r\n#" + localHash + "#", ContentType.TEXT_PLAIN))
+            .addPart('file', new InputStreamBody(inputStream, fileName))
+            .addPart('comment', new StringBody(note + "\r\n#" + localHash + '#', ContentType.TEXT_PLAIN))
             .build()
         post.setEntity(entity)
         callApiAndFailIfNot20x(post)
@@ -112,17 +112,18 @@ abstract class ConfluenceClient {
         fetchPageByPageId(pageId) ?: [:]
     }
 
-    def retrievePageIdByName(String name, String spaceKey){
-      return fetchPageIdByName(name, spaceKey)
+    def retrievePageIdByName(String name, String spaceKey) {
+        return fetchPageIdByName(name, spaceKey)
     }
 
-    private String determineEditorVersion(ConfigService configService){
-        if(configService.getConfigProperty("confluence.enforceNewEditor")
-            && configService.getConfigProperty("confluence.enforceNewEditor").toBoolean() == true){
-            println "WARNING: You are using the new editor version v2. This is not yet fully supported by docToolchain."
-            return "v2"
+    private String determineEditorVersion(ConfigService configService) {
+        if (configService.getConfigProperty('confluence.enforceNewEditor')
+            && configService.getConfigProperty('confluence.enforceNewEditor').toBoolean() == true) {
+            println 'WARNING: You are using the new editor version v2. This is not yet fully supported by docToolchain.'
+            return 'v2'
         } else {
-            return "v1"
-        }
+            return 'v1'
+            }
     }
+
 }

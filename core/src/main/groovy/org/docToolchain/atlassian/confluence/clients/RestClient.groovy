@@ -35,7 +35,7 @@ class RestClient extends BasicRestClient {
         initialize()
     }
 
-    def doRequestAndFailIfNot20x(ClassicHttpRequest httpRequest){
+    def doRequestAndFailIfNot20x(ClassicHttpRequest httpRequest) {
         return doRequest(httpRequest, (ClassicHttpResponse response, HttpEntity entity) -> {
             if (response.getCode() < HttpStatus.SC_OK || response.getCode() > HttpStatus.SC_PARTIAL_CONTENT) {
                 EntityUtils.consume(entity)
@@ -44,7 +44,7 @@ class RestClient extends BasicRestClient {
         })
     }
 
-    def doRequestAndReturnOrNull(ClassicHttpRequest httpRequest){
+    def doRequestAndReturnOrNull(ClassicHttpRequest httpRequest) {
         return doRequest(httpRequest, (ClassicHttpResponse response, HttpEntity entity) -> {
             if (response.getCode() < HttpStatus.SC_OK || response.getCode() > HttpStatus.SC_PARTIAL_CONTENT) {
                 EntityUtils.consume(entity)
@@ -57,47 +57,47 @@ class RestClient extends BasicRestClient {
         })
     }
 
-    private doRequest(ClassicHttpRequest httpRequest, Closure callback){
+    private doRequest(ClassicHttpRequest httpRequest, Closure callback) {
         rateLimiter.acquire()
         return doRequest(targetHost, httpRequest, new RestClientResponseHandler(callback))
             .map(response -> new JsonSlurper().parseText(response))
             .orElse(null)
     }
 
-    private initialize(){
+    private initialize() {
         this.rateLimiter = RateLimiter.create(configService.getConfigProperty('confluence.rateLimit') as Double ?: 10)
         this.headers = constructDefaultHeaders()
         this.targetHost = constructTargetHost()
-        if(configService.getFlatConfigSubTree('confluence.proxy')){
+        if (configService.getFlatConfigSubTree('confluence.proxy')) {
             configureProxy()
         }
         httpClientBuilder.setDefaultHeaders(headers)
     }
 
-    private constructDefaultHeaders(){
+    private constructDefaultHeaders() {
         HashSet<Header> headers = new HashSet<>([
             new BasicHeader('X-Atlassian-Token', 'no-check'),
         ])
-        if(configService.getConfigProperty('confluence.bearerToken')){
+        if (configService.getConfigProperty('confluence.bearerToken')) {
             headers.add(new BasicHeader('Authorization', 'Bearer ' + configService.getConfigProperty('confluence.bearerToken')))
             println 'Start using bearer auth'
         } else {
             headers.add(new BasicHeader('Authorization', 'Basic ' + configService.getConfigProperty('confluence.credentials')))
             //Add api key and value to REST API request header if configured - required for authentification.
-            if (configService.getConfigProperty('confluence.apikey')){
+            if (configService.getConfigProperty('confluence.apikey')) {
                 headers.add(new BasicHeader('keyid', configService.getConfigProperty('confluence.apikey') as String))
             }
         }
         return headers
     }
 
-    private configureProxy(){
+    private configureProxy() {
         def proxy = configService.getFlatConfigSubTree('confluence.proxy')
-        this.proxyHost = new HttpHost(proxy.schema  as String?: 'http', proxy.host as String, proxy.port as Integer)
+        this.proxyHost = new HttpHost(proxy.schema  as String ?: 'http', proxy.host as String, proxy.port as Integer)
         httpClientBuilder.setProxy(proxyHost)
     }
 
-    private constructTargetHost(){
+    private constructTargetHost() {
         String apiConfigItem = configService.getConfigProperty('confluence.api')
         URIBuilder builder = new URIBuilder(apiConfigItem)
         return new HttpHost(builder.getScheme(), builder.getHost(), builder.getPort())
@@ -140,5 +140,7 @@ class RestClient extends BasicRestClient {
                 EntityUtils.consumeQuietly(entity)
             }
         }
+
     }
+
 }

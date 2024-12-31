@@ -14,7 +14,6 @@ import org.docToolchain.configuration.ConfigService
 
 import java.nio.charset.StandardCharsets
 
-
 class ConfluenceClientV1 extends ConfluenceClient {
 
     ConfluenceClientV1(ConfigService configService) {
@@ -29,7 +28,7 @@ class ConfluenceClientV1 extends ConfluenceClient {
 
     @Override
     def addLabel(pageId, label) {
-        HttpRequest post = new HttpPost(API_V1_PATH + '/content/' + pageId + "/label")
+        HttpRequest post = new HttpPost(API_V1_PATH + '/content/' + pageId + '/label')
         post.setHeader('Content-Type', ContentType.APPLICATION_JSON)
         // TODO test if this works
         post.setEntity(new StringEntity(new JsonBuilder([label]).toPrettyString()))
@@ -60,8 +59,8 @@ class ConfluenceClientV1 extends ConfluenceClient {
 
     @Override
     def attachmentHasChanged(Object attachment, Object localHash) {
-        def remoteHash = attachment.results[0].extensions.comment.replaceAll("(?sm).*#([^#]+)#.*",'$1')
-        return remoteHash!=localHash
+        def remoteHash = attachment.results[0].extensions.comment.replaceAll('(?sm).*#([^#]+)#.*', '$1')
+        return remoteHash != localHash
     }
 
     @Override
@@ -136,7 +135,7 @@ class ConfluenceClientV1 extends ConfluenceClient {
             }
 
             if (results.empty && ids.isEmpty()) {
-                if(pageIds.isEmpty()) {
+                if (pageIds.isEmpty()) {
                     morePages = false
                 } else {
                     pageId = pageIds.remove(0)
@@ -178,7 +177,7 @@ class ConfluenceClientV1 extends ConfluenceClient {
             new BasicNameValuePair('title', name),
             new BasicNameValuePair('spaceKey', spaceKey)
         )
-        URI uri = new URIBuilder(API_V1_PATH + "/content")
+        URI uri = new URIBuilder(API_V1_PATH + '/content')
             .addParameters(query)
             .build()
         HttpRequest get = new HttpGet(uri)
@@ -186,7 +185,7 @@ class ConfluenceClientV1 extends ConfluenceClient {
     }
 
     @Override
-    def updatePage(String pageId, String title, String confluenceSpaceKey, Object localPage, Integer pageVersion, String pageVersionComment, String parentId = null){
+    def updatePage(String pageId, String title, String confluenceSpaceKey, Object localPage, Integer pageVersion, String pageVersionComment, String parentId = null) {
         def requestBody = getDefaultModifyPageRequestBody(title, confluenceSpaceKey, localPage, parentId)
         requestBody.id      = pageId
         requestBody.version = [number: pageVersion, message: pageVersionComment ?: '']
@@ -197,7 +196,7 @@ class ConfluenceClientV1 extends ConfluenceClient {
     }
 
     @Override
-    def createPage(String title, String confluenceSpaceKey, Object localPage, String pageVersionComment, String parentId = null){
+    def createPage(String title, String confluenceSpaceKey, Object localPage, String pageVersionComment, String parentId = null) {
         def requestBody = getDefaultModifyPageRequestBody(title, confluenceSpaceKey, localPage, parentId)
         requestBody.version = [message: pageVersionComment ?: '']
         HttpPost post = new HttpPost(API_V1_PATH + '/content')
@@ -215,11 +214,11 @@ class ConfluenceClientV1 extends ConfluenceClient {
                     editor: [
                         value: editorVersion
                     ],
-                    "content-appearance-draft": [
-                        value: "full-width"
+                    'content-appearance-draft': [
+                        value: 'full-width'
                     ],
-                    "content-appearance-published": [
-                        value: "full-width"
+                    'content-appearance-published': [
+                        value: 'full-width'
                     ]
                 ]
             ],
@@ -240,4 +239,5 @@ class ConfluenceClientV1 extends ConfluenceClient {
         }
         requestBody
     }
+
 }

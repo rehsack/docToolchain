@@ -9,20 +9,21 @@ class ConfigBuilder {
         this.configFile = new File(docDir, mainConfigFile)
     }
 
-    ConfigBuilder prepareConfigFileIfNotExists(closure){
-        if(!configFile.exists()){
+    ConfigBuilder prepareConfigFileIfNotExists(closure) {
+        if (!configFile.exists()) {
             closure.run()
         }
         return this
     }
 
-    ConfigObject build(){
-        if(!configFile.exists()){
+    ConfigObject build() {
+        if (!configFile.exists()) {
             throw new FileNotFoundException("Config file does not exist: ${configFile.getCanonicalPath()}")
         }
         ConfigObject config = configSlurper.parse(configFile.text)
-        config.put("docDir", configFile.getParent())
-        config.put("mainConfigFile", configFile.getName())
+        config.put('docDir', configFile.getParent())
+        config.put('mainConfigFile', configFile.getName())
         return config
     }
+
 }

@@ -31,7 +31,7 @@ class HtmlTransformer {
         return sanitizeBody(body)
     }
 
-    private String sanitizeBody(Element body){
+    private String sanitizeBody(Element body) {
         String html = body.html().trim()
         def start = html.indexOf(ConfluenceTags.CDATA_PLACEHOLDER_START)
         while (start > -1) {
@@ -47,12 +47,13 @@ class HtmlTransformer {
             start = html.indexOf(ConfluenceTags.CDATA_PLACEHOLDER_START, start + 1)
         }
         return html
-            .replaceAll('<br>','<br />')
-            .replaceAll('</br>','<br />')
-            .replaceAll('<a([^>]*)></a>','')
-            .replaceAll(ConfluenceTags.CDATA_PLACEHOLDER_START,'<![CDATA[')
-            .replaceAll(ConfluenceTags.CDATA_PLACEHOLDER_END,']]>')
-        // workaround for #402
+            .replaceAll('<br>', '<br />')
+            .replaceAll('</br>', '<br />')
+            .replaceAll('<a([^>]*)></a>', '')
+            .replaceAll(ConfluenceTags.CDATA_PLACEHOLDER_START, '<![CDATA[')
+            .replaceAll(ConfluenceTags.CDATA_PLACEHOLDER_END, ']]>')
+            // workaround for #402
             .replaceAll('(?m)(ac:name="language">)([\n\r\t ]*)([a-z]+)([\n\r\t ]*)(</ac)','$1$3$5')
     }
+
 }

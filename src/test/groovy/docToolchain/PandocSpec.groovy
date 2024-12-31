@@ -1,11 +1,11 @@
 package docToolchain
 
+import static org.gradle.testkit.runner.TaskOutcome.FAILED
+import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
+
 import org.gradle.testkit.runner.GradleRunner
 import spock.lang.Requires
 import spock.lang.Specification
-
-import static org.gradle.testkit.runner.TaskOutcome.FAILED
-import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
 
 class PandocSpec extends Specification {
 
@@ -19,7 +19,7 @@ class PandocSpec extends Specification {
             ])
             .build()
         then: 'pandoc exists and the task succeeded'
-            result.task(":verifyPandoc").outcome == SUCCESS
+        result.task(':verifyPandoc').outcome == SUCCESS
     }
 
     @Requires({ os.windows })
@@ -33,7 +33,7 @@ class PandocSpec extends Specification {
             ])
             .build()
         then: 'pandoc exists and the task succeeded'
-        result.task(":verifyPandoc").outcome == SUCCESS
+        result.task(':verifyPandoc').outcome == SUCCESS
     }
 
     void 'test convert to docx with "docx" configuration'() {
@@ -48,9 +48,9 @@ class PandocSpec extends Specification {
             ])
             .build()
         then: 'the task succeeded'
-        result.task(":convertToDocx").outcome == SUCCESS
+        result.task(':convertToDocx').outcome == SUCCESS
         and: 'the output does not contain the warning'
-            !result.output.contains('WARNING: No source files defined for type "docx".')
+        !result.output.contains('WARNING: No source files defined for type "docx".')
     }
 
     void 'test convert to docx without "docx" but with "docbook" configuration'() {
@@ -65,9 +65,9 @@ class PandocSpec extends Specification {
             ])
             .build()
         then: 'the task succeeded'
-        result.task(":convertToDocx").outcome == SUCCESS
+        result.task(':convertToDocx').outcome == SUCCESS
         and: 'the output does contain the warning'
-            result.output.contains('WARNING: No source files defined for type "docx".')
+        result.output.contains('WARNING: No source files defined for type "docx".')
     }
 
     void 'test convert to docx without required configuration'() {
@@ -81,8 +81,9 @@ class PandocSpec extends Specification {
             ])
             .buildAndFail()
         then: 'the task failed'
-        result.task(":convertToDocx").outcome == FAILED
+        result.task(':convertToDocx').outcome == FAILED
         and: 'threw an exception'
         result.output.contains('No source files defined for type \'docx\'')
     }
+
 }

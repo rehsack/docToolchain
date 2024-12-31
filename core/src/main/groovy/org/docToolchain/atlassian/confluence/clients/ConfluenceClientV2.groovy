@@ -33,7 +33,7 @@ class ConfluenceClientV2 extends ConfluenceClient {
         URI uri = new URIBuilder(API_V2_PATH + '/spaces')
             .addParameter('keys', spaceKey)
             .addParameter('status', 'current')
-            .addParameter('limit', "1")
+            .addParameter('limit', '1')
             .build()
         HttpRequest get = new HttpGet(uri)
         return callApiAndFailIfNot20x(get).results?.getAt(0)?.id
@@ -41,7 +41,7 @@ class ConfluenceClientV2 extends ConfluenceClient {
 
     @Override
     def addLabel(Object pageId, Object label) {
-        HttpRequest post = new HttpPost(API_V1_PATH + '/content/' + pageId + "/label")
+        HttpRequest post = new HttpPost(API_V1_PATH + '/content/' + pageId + '/label')
         post.setHeader('Content-Type', ContentType.APPLICATION_JSON)
         // TODO test if this works
         post.setEntity(new StringEntity(new JsonBuilder([label]).toPrettyString()))
@@ -71,8 +71,8 @@ class ConfluenceClientV2 extends ConfluenceClient {
 
     @Override
     def attachmentHasChanged(attachment, localHash) {
-        def remoteHash = attachment.results[0].comment.replaceAll("(?sm).*#([^#]+)#.*",'$1')
-        return remoteHash!=localHash
+        def remoteHash = attachment.results[0].comment.replaceAll('(?sm).*#([^#]+)#.*', '$1')
+        return remoteHash != localHash
     }
 
     @Override
@@ -80,11 +80,11 @@ class ConfluenceClientV2 extends ConfluenceClient {
         def allPages = [:]
         String cursor
         Boolean morePages = true
-        while (morePages){
+        while (morePages) {
             URIBuilder uriBuilder = new URIBuilder(API_V2_PATH + "/spaces/${spaceId}/pages")
                 .addParameter('depth', 'all')
                 .addParameter('limit', pageLimit.toString())
-            if (cursor){
+            if (cursor) {
                 uriBuilder.addParameter('cursor', cursor)
             }
             URI uri = uriBuilder.build()
@@ -119,11 +119,11 @@ class ConfluenceClientV2 extends ConfluenceClient {
         Boolean morePages = true
         def ids = []
         String pageId = pageIds.remove(0)
-        while (morePages){
+        while (morePages) {
             URIBuilder uriBuilder = new URIBuilder(API_V2_PATH + "/pages/${pageId}/children")
                 .addParameter('depth', 'all')
                 .addParameter('limit', pageLimit.toString())
-            if (cursor){
+            if (cursor) {
                 uriBuilder.addParameter('cursor', cursor)
             }
             URI uri = uriBuilder.build()
@@ -180,7 +180,7 @@ class ConfluenceClientV2 extends ConfluenceClient {
     protected fetchPageIdByName(String name, String spaceKey) {
         URI uri = new URIBuilder(API_V2_PATH + "/spaces/${spaceId}/pages")
             .addParameter('title', name)
-            .addParameter('status', "current")
+            .addParameter('status', 'current')
             .build()
         HttpRequest get = new HttpGet(uri)
         return callApiAndReturnOrNull(get)
@@ -190,31 +190,31 @@ class ConfluenceClientV2 extends ConfluenceClient {
     @Override
     def updatePage(String pageId, String title, String confluenceSpaceKey, Object localPage, Integer pageVersion, String pageVersionComment, String parentId) {
         def requestBody = [
-            "id"      : pageId,
-            "status"  : "current",
-            "title"   : title,
-            "metadata": [
-                "properties": [
-                    "editor": [
-                        "value": editorVersion
+            'id'      : pageId,
+            'status'  : 'current',
+            'title'   : title,
+            'metadata': [
+                'properties': [
+                    'editor': [
+                        'value': editorVersion
                     ],
-                    "content-appearance-draft": [
-                        value: "full-width"
+                    'content-appearance-draft': [
+                        value: 'full-width'
                     ],
-                    "content-appearance-published": [
-                        value: "full-width"
+                    'content-appearance-published': [
+                        value: 'full-width'
                     ]
                 ]
             ],
-            "spaceId"   : spaceId,
-            "parentId": parentId ?: "",
-            "body"    : [
-                "value"          : localPage,
-                "representation": "storage"
+            'spaceId'   : spaceId,
+            'parentId': parentId ?: '',
+            'body'    : [
+                'value'          : localPage,
+                'representation': 'storage'
             ],
-            "version" : [
-                "number" : pageVersion,
-                "message": pageVersionComment
+            'version' : [
+                'number' : pageVersion,
+                'message': pageVersionComment
             ]
         ]
         HttpPut put = new HttpPut(API_V2_PATH + '/pages/' + pageId)
@@ -226,30 +226,30 @@ class ConfluenceClientV2 extends ConfluenceClient {
     @Override
     def createPage(String title, String confluenceSpaceKey, Object localPage, String pageVersionComment, String parentId) {
         def requestBody = [
-            "title"   : title,
-            "metadata": [
-                "properties": [
-                    "editor": [
-                        "value": editorVersion
+            'title'   : title,
+            'metadata': [
+                'properties': [
+                    'editor': [
+                        'value': editorVersion
                     ],
-                    "content-appearance-draft": [
-                        value: "full-width"
+                    'content-appearance-draft': [
+                        value: 'full-width'
                     ],
-                    "content-appearance-published": [
-                        value: "full-width"
+                    'content-appearance-published': [
+                        value: 'full-width'
                     ]
                 ]
             ],
-            "status"  : "current",
-            "spaceId"   : spaceId,
-            "parentId": parentId ?: "",
-            "body"    : [
-                "value"          : localPage,
-                "representation": "storage"
+            'status'  : 'current',
+            'spaceId'   : spaceId,
+            'parentId': parentId ?: '',
+            'body'    : [
+                'value'          : localPage,
+                'representation': 'storage'
             ],
-            "version" : [
-                "number" : 1,
-                "message": pageVersionComment
+            'version' : [
+                'number' : 1,
+                'message': pageVersionComment
             ]
         ]
         HttpPost post = new HttpPost(API_V2_PATH + '/pages')
@@ -257,4 +257,5 @@ class ConfluenceClientV2 extends ConfluenceClient {
         post.setEntity(new StringEntity(new JsonBuilder(requestBody).toPrettyString(), StandardCharsets.UTF_8))
         return callApiAndFailIfNot20x(post)
     }
+
 }

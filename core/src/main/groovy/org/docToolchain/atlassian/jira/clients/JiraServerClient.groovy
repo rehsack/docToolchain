@@ -7,14 +7,14 @@ import org.docToolchain.configuration.ConfigService
 
 class JiraServerClient extends JiraClient {
 
-    protected final String API_PATH = "/rest"
+    protected final String API_PATH = '/rest'
 
     JiraServerClient(ConfigService configService) {
         super(configService)
     }
 
     @Override
-    def getIssuesByJql(String jql, String selectedFields){
+    def getIssuesByJql(String jql, String selectedFields) {
         URI uri = new URIBuilder(API_PATH + '/api/2/search')
             .addParameter('jql', jql)
             .addParameter('maxResults', '1000')
@@ -43,4 +43,5 @@ class JiraServerClient extends JiraClient {
         HttpRequest get = new HttpGet(uri)
         return callApiAndFailIfNot20x(get)
     }
+
 }

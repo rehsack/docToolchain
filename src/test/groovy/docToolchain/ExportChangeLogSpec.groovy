@@ -1,7 +1,9 @@
 package docToolchain
-import spock.lang.*
-import org.gradle.testkit.runner.GradleRunner
+
 import static org.gradle.testkit.runner.TaskOutcome.*
+
+import org.gradle.testkit.runner.GradleRunner
+import spock.lang.*
 
 class ExportChangeLogSpec extends Specification {
 
@@ -10,23 +12,23 @@ class ExportChangeLogSpec extends Specification {
     void 'test creation of log file'() {
         setup: 'clean the environment'
         when: 'remove old changelog file'
-            new File('./build/test/docs/changelog.adoc').delete()
+        new File('./build/test/docs/changelog.adoc').delete()
         then: 'log file does not exist'
-            new File('./build/test/docs/changelog.adoc').exists() == false
+        new File('./build/test/docs/changelog.adoc').exists() == false
         when: 'the gradle task is invoked'
-            def result = GradleRunner.create()
+        def result = GradleRunner.create()
                     .withProjectDir(new File('.'))
-                    .withArguments(['exportChangeLog','--info','-PmainConfigFile=src/test/config.groovy'])
+                    .withArguments(['exportChangeLog', '--info', '-PmainConfigFile=src/test/config.groovy'])
                     .build()
         then: 'the task has been successfully executed'
-            result.task(":exportChangeLog").outcome == SUCCESS
+        result.task(':exportChangeLog').outcome == SUCCESS
         and: 'the log file has been created'
-            println new File('./build/test/docs/changelog.adoc').canonicalPath
-            new File('./build/test/docs/changelog.adoc').exists() == true
+        println new File('./build/test/docs/changelog.adoc').canonicalPath
+        new File('./build/test/docs/changelog.adoc').exists() == true
         and: 'its content ends with our sample file'
-            new File('./build/test/docs/changelog.adoc')
-                    .text.trim().replaceAll("\r","")
-                    .endsWith("""
+        new File('./build/test/docs/changelog.adoc')
+                    .text.trim().replaceAll("\r", '')
+                    .endsWith('''
 | 2017-10-25
 | Ralf D. Mueller
 | refined tests
@@ -38,7 +40,7 @@ class ExportChangeLogSpec extends Specification {
 | 2017-09-24
 | Ralf D. Mueller
 | added tests for plantUml
-""".trim().replaceAll("\r",""))
+'''.trim().replaceAll("\r",''))
     }
 
 }

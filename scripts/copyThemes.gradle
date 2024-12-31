@@ -9,7 +9,7 @@ task copyThemes(
     doLast {
         def color = { color, text ->
             def colors = [black: 30, red: 31, green: 32, yellow: 33, blue: 34, magenta: 35, cyan: 36, white: 37]
-            return new String((char) 27) + "[${colors[color]}m${text}" + new String((char) 27) + "[0m"
+            return new String((char) 27) + "[${colors[color]}m${text}" + new String((char) 27) + '[0m'
         }
         def lang = ant.input(message: "${color 'green', 'What do you want me to copy?'}", validargs: 'pdfTheme,jBakeTheme', addproperty: 'what')
         switch (ant.what) {
@@ -33,7 +33,7 @@ task copyThemes(
                 println "pdfTheme copied into ${targetDir}"
                 break
             case 'jBakeTheme':
-                def targetDir = new File(new File(docDir, inputPath), config.microsite.siteFolder?:'../site')
+                def targetDir = new File(new File(docDir, inputPath), config.microsite.siteFolder ?: '../site')
                 /**
                 if (targetDir.exists()) {
                     println "${targetDir.canonicalPath} already exists"
@@ -46,10 +46,10 @@ task copyThemes(
                     from new File(projectDir, 'src/site')
                     into targetDir
                 }
-                def siteTheme = System.getenv('DTC_SITETHEME')?:""
-                def themeFolder = new File(projectDir, "../themes/" + siteTheme.md5())
+                def siteTheme = System.getenv('DTC_SITETHEME') ?: ''
+                def themeFolder = new File(projectDir, '../themes/' + siteTheme.md5())
                 copy {
-                    from(themeFolder) {}
+                    from(themeFolder) { }
                     into targetDir
                 }
 

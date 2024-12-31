@@ -9,7 +9,7 @@ outputPath = 'build'
 // This path is appended to the docDir property specified in gradle.properties
 // or in the command line, and therefore must be relative to it.
 
-inputPath = 'src/docs';
+inputPath = 'src/docs'
 
 // if you need to register custom Asciidoctor extensions, this is the right place
 // configure the name and path to your extension, relative to the root of your project
@@ -48,8 +48,8 @@ failOnMissingImages = true
 // in order to decide if the docs have to be re-build
 taskInputsDirs = [
                     "${inputPath}",
-//                  "${inputPath}/src",
-//                  "${inputPath}/images",
+                 //                  "${inputPath}/src",
+                 //                  "${inputPath}/images",
                  ]
 
 taskInputsFiles = []
@@ -61,7 +61,6 @@ taskInputsFiles = []
 customTasks = [
 /** customTasks **/
 ]
-
 
 //*****************************************************************************************
 
@@ -122,7 +121,7 @@ microsite.with {
     //
     // the base url for code files in github
     // Example: https://github.com/doctoolchain/doctoolchain/edit/master/src/docs
-    branch = System.getenv("DTC_PROJECT_BRANCH")?:'-'
+    branch = System.getenv('DTC_PROJECT_BRANCH') ?: '-'
     gitRepoUrl = '##git-repo-url##'
 
     //
@@ -150,9 +149,9 @@ Needs `python3` and `docutils` installed.
 
 **/
     additionalConverters = [
-        //'.one': [command: 'println "test"+file.canonicalPath', type: 'groovy'],
-        //'.two': [command: 'scripts/convert-md.groovy', type: 'groovyFile'],
-        //'.rst': [command: 'dtcw:rstToHtml.py', type: 'bash'],
+    //'.one': [command: 'println "test"+file.canonicalPath', type: 'groovy'],
+    //'.two': [command: 'scripts/convert-md.groovy', type: 'groovyFile'],
+    //'.rst': [command: 'dtcw:rstToHtml.py', type: 'bash'],
     ]
 //end::additionalConverters[]
 
@@ -188,7 +187,6 @@ Needs `python3` and `docutils` installed.
 exportChangelog = [:]
 
 changelog.with {
-
     // Directory of which the exportChangelog task will export the changelog.
     // It should be relative to the docDir directory provided in the
     // gradle.properties file.
@@ -205,7 +203,6 @@ changelog.with {
     //
     // See also https://git-scm.com/docs/pretty-formats
     cmd = 'git log --pretty=format:%x7c%x20%ad%x20%n%x7c%x20%an%x20%n%x7c%x20%s%x20%n --date=short'
-
 }
 
 //*****************************************************************************************
@@ -256,7 +253,7 @@ only 'file' or 'url' is allowed. If both are given, 'url' is ignored
 
 confluence.with {
     input = [
-            [ file: "build/html5/arc42-template-de.html" ],
+            [ file: 'build/html5/arc42-template-de.html' ],
     ]
 
     // endpoint of the confluenceAPI (REST) to be used
@@ -327,7 +324,6 @@ confluence.with {
     // default attachmentPrefix = attachment - All files to attach will require to be linked inside the document.
     // attachmentPrefix = "attachment"
 
-
     // Optional proxy configuration, only used to access Confluence
     // schema supports http and https
     // proxy = [host: 'my.proxy.com', port: 1234, schema: 'http']
@@ -341,7 +337,6 @@ confluence.with {
         srcDir: 'sample_data',
         destDir: 'src/docs'
     ]
-
 }
 //end::confluenceConfig[]
 
@@ -368,14 +363,13 @@ exportEA.with {
 // exportPath = "src/docs/"
 // OPTIONAL: relative path to base 'docDir', in which Enterprise Architect project files are searched
 // searchPath = "src/docs/"
-
 }
 //end::exportEAConfig[]
 
 //tag::htmlSanityCheckConfig[]
 htmlSanityCheck.with {
-    //sourceDir = "build/html5/site"
-    //checkingResultsDir =
+//sourceDir = "build/html5/site"
+//checkingResultsDir =
 }
 //end::htmlSanityCheckConfig[]
 
@@ -384,7 +378,6 @@ htmlSanityCheck.with {
 jira = [:]
 
 jira.with {
-
     // endpoint of the JiraAPI (REST) to be used
     api = 'https://your-jira-instance'
 
@@ -409,7 +402,7 @@ jira.with {
     dateTimeFormatParse = "yyyy-MM-dd'T'H:m:s.SSSz" // i.e. 2020-07-24'T'9:12:40.999 CEST
 
     // the format in which the date time should be saved to output
-    dateTimeFormatOutput = "dd.MM.yyyy HH:mm:ss z" // i.e. 24.07.2020 09:02:40 CEST
+    dateTimeFormatOutput = 'dd.MM.yyyy HH:mm:ss z' // i.e. 24.07.2020 09:02:40 CEST
 
     // the label to restrict search to
     label =
@@ -434,7 +427,7 @@ jira.with {
     */
     exports = [
         [
-            filename:"File1_Done_issues",
+            filename:'File1_Done_issues',
             jql:"project='%jiraProject%' AND status='Done' ORDER BY duedate ASC",
             customfields: [customfield_10026:'Story Points']
         ],
@@ -468,7 +461,7 @@ openApi.with {
 sprintChangelog = [:]
 sprintChangelog.with {
     sprintState = 'closed' // it is possible to define multiple states, i.e. 'closed, active, future'
-    ticketStatus = "Done, Closed" // it is possible to define multiple ticket statuses, i.e. "Done, Closed, 'in Progress'"
+    ticketStatus = 'Done, Closed' // it is possible to define multiple ticket statuses, i.e. "Done, Closed, 'in Progress'"
 
     showAssignee = false
     showTicketStatus = false
@@ -488,19 +481,17 @@ sprintChangelog.with {
 collectIncludes = [:]
 
 collectIncludes.with {
+    fileFilter = 'adoc' // define which files are considered. default: "ad|adoc|asciidoc"
 
-    fileFilter = "adoc" // define which files are considered. default: "ad|adoc|asciidoc"
+    minPrefixLength = '3' // define what minimum length the prefix. default: "3"
 
-    minPrefixLength = "3" // define what minimum length the prefix. default: "3"
+    maxPrefixLength = '3' // define what maximum length the prefix. default: ""
 
-    maxPrefixLength = "3" // define what maximum length the prefix. default: ""
-
-    separatorChar = "_" // define the allowed separators after prefix. default: "-_"
+    separatorChar = '_' // define the allowed separators after prefix. default: "-_"
 
     cleanOutputFolder = true // should the output folder be emptied before generation? default: false
 
     excludeDirectories = [] // define additional directories that should not be traversed.
-
 }
 //end::collectIncludesConfig[]
 
@@ -509,15 +500,14 @@ collectIncludes.with {
 structurizr = [:]
 
 structurizr.with {
-
     // Configure where `exportStructurizr` looks for the Structurizr model.
     workspace = {
         // The directory in which the Structurizr workspace file is located.
         // path = 'src/docs/structurizr'
 
-        // By default `exportStructurizr` looks for a file '${structurizr.workspace.path}/workspace.dsl'.
-        // You can customize this behavior with 'filename'. Note that the workspace filename is provided without '.dsl' extension.
-        // filename = 'workspace'
+    // By default `exportStructurizr` looks for a file '${structurizr.workspace.path}/workspace.dsl'.
+    // You can customize this behavior with 'filename'. Note that the workspace filename is provided without '.dsl' extension.
+    // filename = 'workspace'
     }
 
     export = {
@@ -527,13 +517,13 @@ structurizr.with {
         // If a valid Structurizr workspace file is found the directory is deleted before the diagram files are generated.
         // outputPath = 'src/docs/structurizr/diagrams'
 
-        // Format of the exported diagrams. Defaults to 'plantuml' if the parameter is not provided.
-        //
-        // Following formats are supported:
-        // - 'plantuml': the same as 'plantuml/structurizr'
-        // - 'plantuml/structurizr': exports views to PlantUML
-        // - 'plantuml/c4plantuml': exports views to PlantUML with https://github.com/plantuml-stdlib/C4-PlantUML
-        // format = 'plantuml'
+    // Format of the exported diagrams. Defaults to 'plantuml' if the parameter is not provided.
+    //
+    // Following formats are supported:
+    // - 'plantuml': the same as 'plantuml/structurizr'
+    // - 'plantuml/structurizr': exports views to PlantUML
+    // - 'plantuml/c4plantuml': exports views to PlantUML with https://github.com/plantuml-stdlib/C4-PlantUML
+    // format = 'plantuml'
     }
 }
 //end::structurizrConfig[]
@@ -547,8 +537,8 @@ openAI.with {
     // Ensure to pass this token as parameters when calling the task
     // using -PopenAI.token=xx-xxxxxxxxxxxxxx
 
-    //model = "text-davinci-003"
-    //maxToken = '500'
-    //temperature = '0.3'
+//model = "text-davinci-003"
+//maxToken = '500'
+//temperature = '0.3'
 }
 //end::openAIConfig[]

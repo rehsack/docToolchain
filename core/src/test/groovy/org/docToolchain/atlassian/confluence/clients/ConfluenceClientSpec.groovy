@@ -8,146 +8,146 @@ abstract class ConfluenceClientSpec extends Specification {
     abstract ConfluenceClient getConfluenceClient(ConfigService configService)
 
     def "test ConfluenceClient with BasicAuth"() {
-        when: "i create a ConfluenceClient"
-            ConfigObject config = new ConfigObject()
-            config.confluence = [
-                api: "https://confluence.atlassian.com",
-                credentials: "user:password"
+        when: 'i create a ConfluenceClient'
+        ConfigObject config = new ConfigObject()
+        config.confluence = [
+                api: 'https://confluence.atlassian.com',
+                credentials: 'user:password'
             ]
-            ConfigService configService = new ConfigService(config)
-            ConfluenceClient confluenceClient = getConfluenceClient(configService)
-            def headers = confluenceClient.restClient.headers
-        then: "the client is created and configured with basic auth"
-            confluenceClient != null
-            confluenceClient.restClient.targetHost.toURI() == "https://confluence.atlassian.com"
-            confluenceClient.restClient.proxyHost == null
-            confluenceClient.API_V1_PATH == "/wiki/rest/api"
-            confluenceClient.API_V2_PATH == "/wiki/api/v2"
-            headers.size() == 2
-            headers.any { it.getName() == "X-Atlassian-Token" }
-            headers.any { it.getName() == "Authorization" }
+        ConfigService configService = new ConfigService(config)
+        ConfluenceClient confluenceClient = getConfluenceClient(configService)
+        def headers = confluenceClient.restClient.headers
+        then: 'the client is created and configured with basic auth'
+        confluenceClient != null
+        confluenceClient.restClient.targetHost.toURI() == 'https://confluence.atlassian.com'
+        confluenceClient.restClient.proxyHost == null
+        confluenceClient.API_V1_PATH == '/wiki/rest/api'
+        confluenceClient.API_V2_PATH == '/wiki/api/v2'
+        headers.size() == 2
+        headers.any { it.getName() == 'X-Atlassian-Token' }
+        headers.any { it.getName() == 'Authorization' }
     }
 
     def "test ConfluenceClient with BasicAuth and API key"() {
-        when: "i create a ConfluenceClient"
-            ConfigObject config = new ConfigObject()
-            config.confluence = [
-                api: "https://confluence.atlassian.com",
-                credentials: "user:password",
-                apikey: "my-api-key"
+        when: 'i create a ConfluenceClient'
+        ConfigObject config = new ConfigObject()
+        config.confluence = [
+                api: 'https://confluence.atlassian.com',
+                credentials: 'user:password',
+                apikey: 'my-api-key'
             ]
-            ConfigService configService = new ConfigService(config)
-            ConfluenceClient confluenceClient = getConfluenceClient(configService)
-            def headers = confluenceClient.restClient.headers
-        then: "the client is created with basic auth and api key"
-            confluenceClient != null
-            confluenceClient.restClient.targetHost.toURI() == "https://confluence.atlassian.com"
-            confluenceClient.API_V1_PATH == "/wiki/rest/api"
-            confluenceClient.API_V2_PATH == "/wiki/api/v2"
-            headers.size() == 3
-            headers.any { it.getName() == "X-Atlassian-Token" }
-            headers.any { it.getName() == "Authorization" }
-            headers.any { it.getValue() == "Basic user:password" }
-            headers.any { it.getName() == "keyid" }
+        ConfigService configService = new ConfigService(config)
+        ConfluenceClient confluenceClient = getConfluenceClient(configService)
+        def headers = confluenceClient.restClient.headers
+        then: 'the client is created with basic auth and api key'
+        confluenceClient != null
+        confluenceClient.restClient.targetHost.toURI() == 'https://confluence.atlassian.com'
+        confluenceClient.API_V1_PATH == '/wiki/rest/api'
+        confluenceClient.API_V2_PATH == '/wiki/api/v2'
+        headers.size() == 3
+        headers.any { it.getName() == 'X-Atlassian-Token' }
+        headers.any { it.getName() == 'Authorization' }
+        headers.any { it.getValue() == 'Basic user:password' }
+        headers.any { it.getName() == 'keyid' }
     }
 
     def "test ConfluenceClient with Proxy"() {
-        when: "i create a ConfluenceClient"
-            ConfigObject config = new ConfigObject()
-            config.confluence = [
-                api: "https://confluence.atlassian.com",
-                credentials: "user:password",
+        when: 'i create a ConfluenceClient'
+        ConfigObject config = new ConfigObject()
+        config.confluence = [
+                api: 'https://confluence.atlassian.com',
+                credentials: 'user:password',
                 proxy: [
-                    host: "proxy.example.com",
+                    host: 'proxy.example.com',
                     port: 8080,
-                    schema: "https"
+                    schema: 'https'
                 ]
             ]
-            ConfigService configService = new ConfigService(config)
-            ConfluenceClient confluenceClient = getConfluenceClient(configService)
-        then: "the client is created with proxy configured"
-            confluenceClient != null
-            confluenceClient.restClient.proxyHost.toURI() == "https://proxy.example.com:8080"
+        ConfigService configService = new ConfigService(config)
+        ConfluenceClient confluenceClient = getConfluenceClient(configService)
+        then: 'the client is created with proxy configured'
+        confluenceClient != null
+        confluenceClient.restClient.proxyHost.toURI() == 'https://proxy.example.com:8080'
     }
 
     def "test ConfluenceClient with Bearer auth"() {
-        when: "i create a ConfluenceClient"
-            ConfigObject config = new ConfigObject()
-            config.confluence = [
-                api: "https://confluence.atlassian.com",
-                credentials: "user:password",
-                bearerToken: "tokenXYZ"
+        when: 'i create a ConfluenceClient'
+        ConfigObject config = new ConfigObject()
+        config.confluence = [
+                api: 'https://confluence.atlassian.com',
+                credentials: 'user:password',
+                bearerToken: 'tokenXYZ'
             ]
-            ConfigService configService = new ConfigService(config)
-            ConfluenceClient confluenceClient = getConfluenceClient(configService)
-            def headers = confluenceClient.restClient.headers
-        then: "the client is created with bearer token configure and basic auth is ignored"
-            confluenceClient != null
-            headers.size() == 2
-            headers.any { it.getValue() == "Bearer tokenXYZ" }
-            headers.any { it.getValue() != "Basic user:password" }
+        ConfigService configService = new ConfigService(config)
+        ConfluenceClient confluenceClient = getConfluenceClient(configService)
+        def headers = confluenceClient.restClient.headers
+        then: 'the client is created with bearer token configure and basic auth is ignored'
+        confluenceClient != null
+        headers.size() == 2
+        headers.any { it.getValue() == 'Bearer tokenXYZ' }
+        headers.any { it.getValue() != 'Basic user:password' }
     }
 
     def "test ConfluenceClient that uses the new editor"() {
-        when: "i create a ConfluenceClient"
-            ConfigObject config = new ConfigObject()
-            config.confluence = [
-                api: "https://confluence.atlassian.com",
-                credentials: "user:password",
-                enforceNewEditor: "true"
+        when: 'i create a ConfluenceClient'
+        ConfigObject config = new ConfigObject()
+        config.confluence = [
+                api: 'https://confluence.atlassian.com',
+                credentials: 'user:password',
+                enforceNewEditor: 'true'
             ]
-            ConfigService configService = new ConfigService(config)
-            ConfluenceClient confluenceClient = getConfluenceClient(configService)
-        then: "the client is created and configured with new editor"
-            confluenceClient != null
-            confluenceClient.editorVersion == "v2"
+        ConfigService configService = new ConfigService(config)
+        ConfluenceClient confluenceClient = getConfluenceClient(configService)
+        then: 'the client is created and configured with new editor'
+        confluenceClient != null
+        confluenceClient.editorVersion == 'v2'
     }
 
     def "test ConfluenceClient that uses the old editor"() {
-        when: "i create a ConfluenceClient"
-            ConfigObject config = new ConfigObject()
-            config.confluence = [
-                api: "https://confluence.atlassian.com",
-                credentials: "user:password",
-                enforceNewEditor: "false"
+        when: 'i create a ConfluenceClient'
+        ConfigObject config = new ConfigObject()
+        config.confluence = [
+                api: 'https://confluence.atlassian.com',
+                credentials: 'user:password',
+                enforceNewEditor: 'false'
             ]
-            ConfigService configService = new ConfigService(config)
-            ConfluenceClient confluenceClient = getConfluenceClient(configService)
-        then: "the client is created and configured with old editor"
-            confluenceClient != null
-            confluenceClient.editorVersion == "v1"
+        ConfigService configService = new ConfigService(config)
+        ConfluenceClient confluenceClient = getConfluenceClient(configService)
+        then: 'the client is created and configured with old editor'
+        confluenceClient != null
+        confluenceClient.editorVersion == 'v1'
     }
 
     def "test ConfluenceClient that uses the old editor per default"() {
-        when: "i create a ConfluenceClient"
-            ConfigObject config = new ConfigObject()
-            config.confluence = [
-                api: "https://confluence.atlassian.com",
-                credentials: "user:password"
+        when: 'i create a ConfluenceClient'
+        ConfigObject config = new ConfigObject()
+        config.confluence = [
+                api: 'https://confluence.atlassian.com',
+                credentials: 'user:password'
             ]
-            ConfigService configService = new ConfigService(config)
-            ConfluenceClient confluenceClient = getConfluenceClient(configService)
-        then: "the client is created and configured with old editor as default"
-            confluenceClient != null
-            confluenceClient.editorVersion == "v1"
+        ConfigService configService = new ConfigService(config)
+        ConfluenceClient confluenceClient = getConfluenceClient(configService)
+        then: 'the client is created and configured with old editor as default'
+        confluenceClient != null
+        confluenceClient.editorVersion == 'v1'
     }
 
     abstract ConfluenceClient setupConfluenceClientToFetchPagesBySpaceKey(ConfigService configService)
 
     def "test fetchPagesBySpaceKey"() {
-        setup: "i create a ConfluenceClient"
-            ConfigObject config = new ConfigObject()
-            config.confluence = [
-                api: "https://confluence.atlassian.com",
-                credentials: "user:password"
+        setup: 'i create a ConfluenceClient'
+        ConfigObject config = new ConfigObject()
+        config.confluence = [
+                api: 'https://confluence.atlassian.com',
+                credentials: 'user:password'
             ]
-            ConfigService configService = new ConfigService(config)
-            ConfluenceClient confluenceClient = setupConfluenceClientToFetchPagesBySpaceKey(configService)
-        when: "i fetch pages by space key"
-         def pages = confluenceClient.fetchPagesBySpaceKey("123456", 100)
-        then: "the pages are given"
-            pages.size() == 10
-            pages == ['page old 1': [title: 'page old 1', id: '688183', parentId: '47456033'],
+        ConfigService configService = new ConfigService(config)
+        ConfluenceClient confluenceClient = setupConfluenceClientToFetchPagesBySpaceKey(configService)
+        when: 'i fetch pages by space key'
+        def pages = confluenceClient.fetchPagesBySpaceKey('123456', 100)
+        then: 'the pages are given'
+        pages.size() == 10
+        pages == ['page old 1': [title: 'page old 1', id: '688183', parentId: '47456033'],
                        'page old 2': [title: 'page old 2', id: '1081416', parentId: null],
                        'page old 3': [title: 'page old 3', id: '4390965', parentId: '1081416'],
                        'page old 4': [title: 'page old 4', id: '4391029', parentId: '4390965'],
@@ -162,19 +162,19 @@ abstract class ConfluenceClientSpec extends Specification {
     abstract ConfluenceClient setupConfluenceClientToFetchPagesByAncestorIdKey(ConfigService configService)
 
     def "test fetchPagesByAncestorId"() {
-        setup: "i create a ConfluenceClient"
-            ConfigObject config = new ConfigObject()
-            config.confluence = [
-                api: "https://confluence.atlassian.com",
-                credentials: "user:password"
+        setup: 'i create a ConfluenceClient'
+        ConfigObject config = new ConfigObject()
+        config.confluence = [
+                api: 'https://confluence.atlassian.com',
+                credentials: 'user:password'
             ]
-            ConfigService configService = new ConfigService(config)
-            ConfluenceClient confluenceClient = setupConfluenceClientToFetchPagesByAncestorIdKey(configService)
-        when: "i fetch pages by ancestorId"
-            def pages = confluenceClient.fetchPagesByAncestorId(['123'], 100)
-        then: "the pages are given"
-            pages.size() == 7
-            pages == ['page 1': [title: 'page 1', id: '183954870', parentId: '123'],
+        ConfigService configService = new ConfigService(config)
+        ConfluenceClient confluenceClient = setupConfluenceClientToFetchPagesByAncestorIdKey(configService)
+        when: 'i fetch pages by ancestorId'
+        def pages = confluenceClient.fetchPagesByAncestorId(['123'], 100)
+        then: 'the pages are given'
+        pages.size() == 7
+        pages == ['page 1': [title: 'page 1', id: '183954870', parentId: '123'],
                        'page 2': [title: 'page 2', id: '92996640', parentId: '123'],
                        'page 3': [title: 'page 3', id: '101845068', parentId: '123'],
                        'page 4': [title: 'page 4', id: '183954872', parentId: '123'],
@@ -184,100 +184,101 @@ abstract class ConfluenceClientSpec extends Specification {
     }
 
     def "test ConfluencClient API path without context"() {
-        given: "i create a Confluence config and the API does not have a context path"
-            ConfigObject config = new ConfigObject()
-            config.confluence = [
-                api: "https://confluence.atlassian.com/rest/api/",
-                credentials: "user:password"
+        given: 'i create a Confluence config and the API does not have a context path'
+        ConfigObject config = new ConfigObject()
+        config.confluence = [
+                api: 'https://confluence.atlassian.com/rest/api/',
+                credentials: 'user:password'
             ]
-            ConfigService configService = new ConfigService(config)
-            ConfluenceClient confluenceClient = getConfluenceClient(configService)
-        when: "the client has been created"
-            def baseApiUrl = confluenceClient.restClient.targetHost.toURI()
-        then: "the API BaseUrl is set without the context path"
-            baseApiUrl == "https://confluence.atlassian.com"
-            confluenceClient.API_V1_PATH == "/rest/api"
+        ConfigService configService = new ConfigService(config)
+        ConfluenceClient confluenceClient = getConfluenceClient(configService)
+        when: 'the client has been created'
+        def baseApiUrl = confluenceClient.restClient.targetHost.toURI()
+        then: 'the API BaseUrl is set without the context path'
+        baseApiUrl == 'https://confluence.atlassian.com'
+        confluenceClient.API_V1_PATH == '/rest/api'
     }
 
     def "test default API path is set correctly if there are no trailing slashes"() {
-        given: "i create a Confluence config with host only"
-            ConfigObject config = new ConfigObject()
-            config.confluence = [
-                api: "https://confluence.atlassian.com/wiki/api/v2",
-                credentials: "user:password"
+        given: 'i create a Confluence config with host only'
+        ConfigObject config = new ConfigObject()
+        config.confluence = [
+                api: 'https://confluence.atlassian.com/wiki/api/v2',
+                credentials: 'user:password'
             ]
-            ConfigService configService = new ConfigService(config)
-            ConfluenceClient confluenceClient = getConfluenceClient(configService)
-        when: "the client has been created"
-            def baseApiUrl = confluenceClient.restClient.targetHost.toURI()
-        then: "the default API path is set correctly"
-            baseApiUrl == "https://confluence.atlassian.com"
-            confluenceClient.API_V1_PATH == "/wiki/rest/api"
+        ConfigService configService = new ConfigService(config)
+        ConfluenceClient confluenceClient = getConfluenceClient(configService)
+        when: 'the client has been created'
+        def baseApiUrl = confluenceClient.restClient.targetHost.toURI()
+        then: 'the default API path is set correctly'
+        baseApiUrl == 'https://confluence.atlassian.com'
+        confluenceClient.API_V1_PATH == '/wiki/rest/api'
     }
 
     def "test ConfluencClient API path could be context aware"() {
-        given: "i create a Confluence config that includes the API context path and has no trailing slash"
-            ConfigObject config = new ConfigObject()
-            config.confluence = [
-                api: "https://confluence.atlassian.com/foo/rest/api/",
-                credentials: "user:password"
+        given: 'i create a Confluence config that includes the API context path and has no trailing slash'
+        ConfigObject config = new ConfigObject()
+        config.confluence = [
+                api: 'https://confluence.atlassian.com/foo/rest/api/',
+                credentials: 'user:password'
             ]
-            ConfigService configService = new ConfigService(config)
-            ConfluenceClient confluenceClient = getConfluenceClient(configService)
-        when: "the client has been created"
-            def baseApiUrl = confluenceClient.restClient.targetHost.toURI()
-        then: "the API path is set with the context path and a trailing slash"
-            baseApiUrl == "https://confluence.atlassian.com"
-            confluenceClient.API_V1_PATH == "/foo/rest/api"
+        ConfigService configService = new ConfigService(config)
+        ConfluenceClient confluenceClient = getConfluenceClient(configService)
+        when: 'the client has been created'
+        def baseApiUrl = confluenceClient.restClient.targetHost.toURI()
+        then: 'the API path is set with the context path and a trailing slash'
+        baseApiUrl == 'https://confluence.atlassian.com'
+        confluenceClient.API_V1_PATH == '/foo/rest/api'
     }
 
     def "test ConfluencClient API path could contain context only"() {
-        given: "i create a Confluence config that includes the API context only"
-            ConfigObject config = new ConfigObject()
-            config.confluence = [
-                api: "https://confluence.atlassian.com/foo",
-                credentials: "user:password"
+        given: 'i create a Confluence config that includes the API context only'
+        ConfigObject config = new ConfigObject()
+        config.confluence = [
+                api: 'https://confluence.atlassian.com/foo',
+                credentials: 'user:password'
             ]
-            ConfigService configService = new ConfigService(config)
-            ConfluenceClient confluenceClient = getConfluenceClient(configService)
-        when: "the client has been created"
-            def baseApiUrl = confluenceClient.restClient.targetHost.toURI()
-        then: "the API path is set with the context path and a trailing slash"
-            baseApiUrl == "https://confluence.atlassian.com"
-            confluenceClient.API_V1_PATH == "/foo/rest/api"
+        ConfigService configService = new ConfigService(config)
+        ConfluenceClient confluenceClient = getConfluenceClient(configService)
+        when: 'the client has been created'
+        def baseApiUrl = confluenceClient.restClient.targetHost.toURI()
+        then: 'the API path is set with the context path and a trailing slash'
+        baseApiUrl == 'https://confluence.atlassian.com'
+        confluenceClient.API_V1_PATH == '/foo/rest/api'
     }
 
     def "test default API path is set correctly"() {
-        given: "i create a Confluence config with host only"
-            ConfigObject config = new ConfigObject()
-            config.confluence = [
-                api: "https://confluence.atlassian.com",
-                credentials: "user:password"
+        given: 'i create a Confluence config with host only'
+        ConfigObject config = new ConfigObject()
+        config.confluence = [
+                api: 'https://confluence.atlassian.com',
+                credentials: 'user:password'
             ]
-            ConfigService configService = new ConfigService(config)
-            ConfluenceClient confluenceClient = getConfluenceClient(configService)
-        when: "the client has been created"
-            def baseApiUrl = confluenceClient.restClient.targetHost.toURI()
-        then: "the default API path is set correctly"
-            baseApiUrl == "https://confluence.atlassian.com"
-            confluenceClient.API_V1_PATH == "/wiki/rest/api"
-            confluenceClient.API_V2_PATH == "/wiki/api/v2"
+        ConfigService configService = new ConfigService(config)
+        ConfluenceClient confluenceClient = getConfluenceClient(configService)
+        when: 'the client has been created'
+        def baseApiUrl = confluenceClient.restClient.targetHost.toURI()
+        then: 'the default API path is set correctly'
+        baseApiUrl == 'https://confluence.atlassian.com'
+        confluenceClient.API_V1_PATH == '/wiki/rest/api'
+        confluenceClient.API_V2_PATH == '/wiki/api/v2'
     }
 
     def "test default API path is set correctly when config ends with /"() {
-        given: "i create a Confluence config with host only that ends with a /"
-            ConfigObject config = new ConfigObject()
-            config.confluence = [
-                api: "https://confluence.atlassian.com/",
-                credentials: "user:password"
+        given: 'i create a Confluence config with host only that ends with a /'
+        ConfigObject config = new ConfigObject()
+        config.confluence = [
+                api: 'https://confluence.atlassian.com/',
+                credentials: 'user:password'
             ]
-            ConfigService configService = new ConfigService(config)
-            ConfluenceClient confluenceClient = getConfluenceClient(configService)
-        when: "the client has been created"
-            def baseApiUrl = confluenceClient.restClient.targetHost.toURI()
-        then: "the default API path is set correctly"
-            baseApiUrl == "https://confluence.atlassian.com"
-            confluenceClient.API_V1_PATH == "/wiki/rest/api"
-            confluenceClient.API_V2_PATH == "/wiki/api/v2"
+        ConfigService configService = new ConfigService(config)
+        ConfluenceClient confluenceClient = getConfluenceClient(configService)
+        when: 'the client has been created'
+        def baseApiUrl = confluenceClient.restClient.targetHost.toURI()
+        then: 'the default API path is set correctly'
+        baseApiUrl == 'https://confluence.atlassian.com'
+        confluenceClient.API_V1_PATH == '/wiki/rest/api'
+        confluenceClient.API_V2_PATH == '/wiki/api/v2'
     }
+
 }
